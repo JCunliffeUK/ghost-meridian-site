@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghost Meridian</title>
+<meta name="description" content="Ghost Meridian is an independent games studio. Our first game is in development.">
+<meta name="theme-color" content="#28204F">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ghostmeridian.games/">
+<meta property="og:title" content="Ghost Meridian">
+<meta property="og:description" content="An independent games studio. Our first game is in development.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2328204F'/%3E%3Cpath d='M8 1L15 8L8 15L1 8Z' fill='%23FFBD54'/%3E%3Cpath d='M8 4L12 8L8 12L4 8Z' fill='%2328204F'/%3E%3Crect x='7' y='7' width='2' height='2' fill='%23E7E5F5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Slingshot / Blitzball palette */
+    --void: #28204F;
+    --void-deep: #1B1538;
+    --violet: #6845D5;
+    --plasma: #248FD0;
+    --solar: #FFBD54;
+    --pearl: #E7E5F5;
+    --gutter: clamp(20px, 6vw, 96px);
+    --cut: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--void);
+    color: var(--pearl);
+  }
+
+  body {
+    font-family: "Chakra Petch", system-ui, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    z-index: 0;
+  }
+
+  .sky {
+    flex: none;
+    height: 42vh;
+    height: 42svh;
+    min-height: 240px;
+  }
+
+  .anchor { height: 0; }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 40px var(--gutter) 28px;
+  }
+
+  .wordmark {
+    margin: 0;
+    font-family: "Silkscreen", "Chakra Petch", monospace;
+    font-weight: 400;
+    font-size: clamp(50px, 10vw, 128px);
+    line-height: 0.86;
+    letter-spacing: -0.01em;
+    color: var(--pearl);
+  }
+
+  .wordmark span { display: block; }
+
+  .intro {
+    margin: 0;
+    max-width: 36ch;
+    font-size: clamp(17px, 1.5vw, 20px);
+    color: rgba(231, 229, 245, 0.84);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 32px;
+  }
+
+  a {
+    color: var(--pearl);
+    text-decoration: none;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--solar);
+    outline-offset: 4px;
+  }
+
+  /* Primary action: a cut-corner plate, drawn on a pseudo-element so the
+     focus outline isn't clipped away */
+  .email {
+    position: relative;
+    isolation: isolate;
+    display: inline-block;
+    padding: 12px 20px;
+    font-weight: 600;
+    color: var(--void);
+  }
+
+  .email::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--solar);
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  }
+
+  .email:hover::before { background: var(--pearl); }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .socials a {
+    border-bottom: 2px solid var(--violet);
+    padding-bottom: 2px;
+  }
+
+  .socials a:hover {
+    color: var(--solar);
+    border-color: var(--solar);
+  }
+
+  footer {
+    margin-top: auto;
+    padding-top: 24px;
+    font-size: 14px;
+    color: rgba(231, 229, 245, 0.55);
+  }
+
+  /* One load moment: the meridian draws across, then the name resolves */
+  @media (prefers-reduced-motion: no-preference) {
+    .wordmark span {
+      clip-path: inset(0 100% 0 0);
+      animation: resolve 0.8s steps(12, end) forwards;
+      animation-delay: 1.15s;
+    }
+    .wordmark span + span { animation-delay: 1.3s; }
+
+    .intro, .actions, footer {
+      opacity: 0;
+      animation: arrive 0.4s steps(4, end) forwards;
+      animation-delay: 2s;
+    }
+  }
+
+  @keyframes resolve { to { clip-path: inset(0 0 0 0); } }
+  @keyframes arrive { to { opacity: 1; } }
+
+  @media (max-width: 640px) {
+    .sky { height: 40vh; height: 40svh; min-height: 220px; }
+    .content { gap: 24px; padding-top: 36px; }
+    .socials { gap: 8px 18px; }
+  }
+</style>
+</head>
+<body>
+  <main class="hero">
+    <canvas id="field" aria-hidden="true"></canvas>
+    <div class="sky"></div>
+    <div class="anchor" aria-hidden="true"></div>
+
+    <div class="content">
+      <h1 class="wordmark"><span>Ghost</span><span>Meridian</span></h1>
+
+      <p class="intro">An independent games studio. Our first game is in development, and the full site is on its way.</p>
+
+      <div class="actions">
+        <a class="email" href="mailto:hello@ghostmeridian.games">hello@ghostmeridian.games</a>
+
+        <!-- Add each profile as a list item. The list hides itself while empty.
+             Example: <li><a href="https://bsky.app/profile/ghostmeridian.games">Bluesky</a></li> -->
+        <ul class="socials" aria-label="Ghost Meridian elsewhere">
+          <li><a href="https://ghostmeridian.itch.io" rel="me">itch.io</a></li>
+          <li><a href="https://bsky.app/profile/ghostmeridiangames.bsky.social" rel="me">Bluesky</a></li>
+          <li><a href="https://www.instagram.com/ghostmeridiangames/" rel="me">Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@ghostmeridiangames" rel="me">TikTok</a></li>
+          <li><a href="https://x.com/Ghost_Meridian" rel="me">X</a></li>
+          <!-- <li><a href="YOUTUBE_URL" rel="me">YouTube</a></li> -->
+        </ul>
+      </div>
+
+      <footer>© 2026 Ghost Meridian</footer>
+    </div>
+  </main>
+
+<script>
+(() => {
+  // Hide the socials list until it has links in it
+  const socials = document.querySelector('.socials');
+  if (socials && !socials.querySelector('li')) socials.hidden = true;
+
+  const canvas = document.getElementById('field');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const hero = document.querySelector('.hero');
+  const anchor = document.querySelector('.anchor');
+  const bg = document.createElement('canvas');
+  const bctx = bg.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const PAL = {
+    void:   [40, 32, 79],
+    deep:   [27, 21, 56],
+    violet: [104, 69, 213],
+    plasma: [36, 143, 208],
+    solar:  [255, 189, 84],
+    pearl:  [231, 229, 245]
+  };
+  const css = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+
+  // 4x4 ordered dither
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
+
+  let PX, W, H, lineY, dX, R, spreadUp, motes = [];
+  const start = performance.now();
+  let last = start;
+
+  function layout() {
+    PX = window.innerWidth < 640 ? 3 : 4;
+    W = Math.max(1, Math.ceil(hero.clientWidth / PX));
+    H = Math.max(1, Math.ceil(hero.clientHeight / PX));
+    canvas.width = bg.width = W;
+    canvas.height = bg.height = H;
+    lineY = Math.round(anchor.offsetTop / PX);
+    dX = Math.round(W * (W * PX < 640 ? 0.78 : 0.7));
+    R = PX === 3 ? 6 : 8;
+    spreadUp = Math.max(16, lineY * 0.42);
+    paintBackground();
+    seedMotes();
+  }
+
+  function paintBackground() {
+    const img = bctx.createImageData(W, H);
+    const d = img.data;
+    const spreadP = Math.max(4, lineY * 0.07);
+    const spreadDown = Math.max(3, spreadUp * 0.12);
+    const spreadX = W * 0.36;
+
+    for (let y = 0; y < H; y++) {
+      const above = y <= lineY;
+      const dy = Math.abs(y - lineY);
+      const sky = above ? Math.pow((lineY - y) / Math.max(1, lineY), 1.6) * 0.6 : 0;
+      for (let x = 0; x < W; x++) {
+        const t = BAYER[(y & 3) * 4 + (x & 3)];
+        const pool = 0.4 + 0.6 * Math.exp(-Math.pow((x - dX) / spreadX, 2));
+        const p = Math.exp(-dy / (above ? spreadP : spreadP * 0.5)) * pool * 0.62;
+        const v = Math.exp(-dy / (above ? spreadUp : spreadDown)) * pool * 0.5;
+        let c = PAL.void;
+        if (p > t) c = PAL.plasma;
+        else if (v > t) c = PAL.violet;
+        else if (sky > t) c = PAL.deep;
+        const i = (y * W + x) * 4;
+        d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
+      }
+    }
+    bctx.putImageData(img, 0, 0);
+  }
+
+  function newMote(anywhere) {
+    const r = Math.random();
+    return {
+      x: Math.random() * W,
+      y: anywhere ? lineY - Math.random() * spreadUp * 1.5 : lineY - 2 - Math.random() * 6,
+      vy: 1.2 + Math.random() * 3.5,
+      drift: (Math.random() - 0.5) * 0.6,
+      phase: Math.random() * Math.PI * 2,
+      rate: 0.8 + Math.random() * 1.6,
+      c: r < 0.2 ? PAL.pearl : r < 0.65 ? PAL.violet : PAL.plasma
+    };
+  }
+
+  function seedMotes() {
+    const n = Math.min(90, Math.round((W * lineY) / 500));
+    motes = Array.from({ length: n }, () => newMote(true));
+  }
+
+  function drawDiamond(t) {
+    for (let dy = -R; dy <= R; dy++) {
+      const w = R - Math.abs(dy);
+      const y = lineY + dy;
+      ctx.fillStyle = css(PAL.void);
+      ctx.fillRect(dX - w, y, w * 2 + 1, 1);
+      ctx.fillStyle = css(PAL.solar);
+      ctx.fillRect(dX - w, y, 1, 1);
+      ctx.fillRect(dX + w, y, 1, 1);
+    }
+    // Core: a slow two-step pulse
+    const on = reduce || Math.floor(t / 1.2) % 2 === 0;
+    ctx.fillStyle = css(on ? PAL.pearl : PAL.plasma);
+    for (let dy = -2; dy <= 2; dy++) {
+      const w = 2 - Math.abs(dy);
+      ctx.fillRect(dX - w, lineY + dy, w * 2 + 1, 1);
+    }
+  }
+
+  function frame(now) {
+    const t = (now - start) / 1000;
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    ctx.drawImage(bg, 0, 0);
+
+    // Motes rising off the meridian
+    for (const m of motes) {
+      if (!reduce) {
+        m.y -= m.vy * dt;
+        m.x += m.drift * dt;
+        if (m.y < lineY - spreadUp * 1.6 || m.y < 0) Object.assign(m, newMote(false));
+      }
+      if (Math.sin(t * m.rate + m.phase) > -0.35) {
+        ctx.fillStyle = css(m.c);
+        ctx.fillRect(Math.round(m.x), Math.round(m.y), 1, 1);
+      }
+    }
+
+    // The meridian draws across in steps
+    const reveal = reduce ? 1 : Math.min(1, t / 1.1);
+    const lx = Math.round(W * Math.floor(reveal * 28) / 28);
+    ctx.fillStyle = css(PAL.plasma);
+    ctx.fillRect(0, lineY - 1, lx, 1);
+    ctx.fillRect(0, lineY + 1, lx, 1);
+    ctx.fillStyle = css(PAL.pearl);
+    ctx.fillRect(0, lineY, lx, 1);
+
+    ctx.fillStyle = css(PAL.violet);
+    for (let x = 6; x < lx; x += 20) ctx.fillRect(x, lineY + 3, 1, 2);
+
+    if (lx >= dX) drawDiamond(t);
+
+    if (!reduce) requestAnimationFrame(frame);
+  }
+
+  let pending = false;
+  function onResize() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => {
+      pending = false;
+      layout();
+      if (reduce) frame(performance.now());
+    });
+  }
+
+  layout();
+  if (reduce) frame(performance.now());
+  else requestAnimationFrame(frame);
+
+  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(hero);
+  else window.addEventListener('resize', onResize);
+})();
+</script>
+</body>
+</html>
