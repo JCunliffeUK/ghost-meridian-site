@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Pixel Blitz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Pixel Blitz is a free pixel-art workbench from Ghost Meridian: convert images, draw, rig, animate and build characters for your game, in one browser page.">
+<meta name="theme-color" content="#28204F">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2328204F'/%3E%3Cpath d='M8 1L15 8L8 15L1 8Z' fill='%23FFBD54'/%3E%3Cpath d='M8 4L12 8L8 12L4 8Z' fill='%2328204F'/%3E%3Crect x='7' y='7' width='2' height='2' fill='%23E7E5F5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&family=Silkscreen&display=swap">
+<style>
+/* Layout: the studio home page's language, carried onto a product page. The same dithered field and meridian line
+   open the page, the name sits under it in Silkscreen, and the sections run down the left edge of a wide gutter.
+   Solar cut-corner plates are the things to press; Violet underlines are links. */
+:root{
+  color-scheme:dark;
+  --void:#28204F; --void-deep:#1B1538; --violet:#6845D5; --plasma:#248FD0; --solar:#FFBD54; --pearl:#E7E5F5;
+  --pearl-84:rgba(231,229,245,.84); --pearl-55:rgba(231,229,245,.55);
+  --gutter:clamp(20px,6vw,96px); --cut:10px;
+  --f-word:'Silkscreen','Chakra Petch',monospace;
+  --f-body:'Chakra Petch',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--void);color:var(--pearl);font:18px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
+a{color:var(--pearl);text-decoration:none}
+a:focus-visible{outline:2px solid var(--solar);outline-offset:4px}
+.pad{padding-left:max(var(--gutter),env(safe-area-inset-left,0px));padding-right:max(var(--gutter),env(safe-area-inset-right,0px))}
+img{display:block;max-width:100%;height:auto}
+
+/* the two kinds of control, exactly as on ghostmeridian.games */
+.plate{position:relative;isolation:isolate;display:inline-block;padding:12px 20px;font-weight:600;color:var(--void)}
+.plate::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--solar);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.plate:hover::before{background:var(--pearl)}
+button.plate{border:0;background:none;font:inherit;font-weight:600;cursor:pointer}
+button.plate:focus-visible{outline:2px solid var(--solar);outline-offset:4px}
+
+/* the coming-soon card: the app's welcome card, in the site's dress */
+/* a Violet cut-corner frame (the dialog) round a deep Void card (.soon-in) */
+.soon{width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 32px);padding:2px;border:0;color:var(--pearl);background:var(--violet);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.soon-in{position:relative;max-height:calc(100vh - 36px);overflow:auto;padding:28px clamp(20px,4vw,36px) 26px;background:var(--void-deep);
+  clip-path:polygon(calc(var(--cut) - 1px) 0,100% 0,100% calc(100% - var(--cut) + 1px),calc(100% - var(--cut) + 1px) 100%,0 100%,0 calc(var(--cut) - 1px))}
+.soon::backdrop{background:rgba(27,21,56,.78)}
+.soon-logo{width:336px;max-width:calc(100% - 40px);height:auto;margin:0 0 20px;image-rendering:pixelated}
+.soon h2{margin:10px 0 12px}
+.soon p{margin:0 0 10px;color:var(--pearl-84);max-width:46ch}
+.soon p.dim{color:var(--pearl-55)}
+.soon b{color:var(--pearl);font-weight:600}
+.soon .actions{margin-top:20px}
+.soon .small{margin-top:20px}
+.soon-close{position:absolute;top:12px;right:12px;margin:0}
+.soon-close button{width:36px;height:36px;border:0;background:none;color:var(--pearl-84);font:400 26px/1 var(--f-body);cursor:pointer}
+.soon-close button:hover{color:var(--solar)}
+.soon-close button:focus-visible{outline:2px solid var(--solar);outline-offset:2px}
+.line-link{border-bottom:2px solid var(--violet);padding-bottom:2px}
+.line-link:hover{color:var(--solar);border-color:var(--solar)}
+
+/* hero: the field and the meridian, then the name */
+.hero{position:relative;overflow:hidden}
+#field{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;z-index:0}
+.sky{height:34vh;min-height:200px;max-height:360px}
+.anchor{height:0}
+/* room under the meridian before the name; Silkscreen draws each letter 0.12em in from its edge, so the name steps
+   back by that much to line up with the text below it */
+.hero-body{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,5vw,72px);align-items:start;padding-block:clamp(56px,7.5vw,112px) 64px}
+.wordmark{margin:0 0 0 -.12em;font:400 clamp(50px,9vw,116px)/.86 var(--f-word);letter-spacing:-.01em}
+.wordmark span{display:block}
+.intro{margin:22px 0 0;max-width:36ch;font-size:clamp(17px,1.5vw,20px);color:var(--pearl-84)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin-top:26px}
+.small{font-size:15px;color:var(--pearl-55);margin:18px 0 0;max-width:46ch}
+.shot{border:2px solid var(--void-deep);background:var(--void-deep);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.hero .shot{margin-top:0}
+
+/* tabs: the app's six tabs as an underlined row */
+.tabs{display:flex;flex-wrap:wrap;gap:10px 26px;padding:6px 0 40px;margin:0;list-style:none;font-size:16px}
+.tabs a{font-family:var(--f-word);font-size:14px;letter-spacing:.04em}
+
+/* sections */
+.section{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:clamp(24px,4vw,64px);align-items:center;padding-block:44px;border-top:1px solid rgba(104,69,213,.45);scroll-margin-top:16px}
+.section.flip .copy{order:2}
+.section.wide{grid-template-columns:minmax(0,1fr)}
+.label{font:400 14px/1 var(--f-word);letter-spacing:.04em;color:var(--solar)}
+h2{margin:12px 0 12px;font:600 clamp(26px,3vw,36px)/1.15 var(--f-body);text-wrap:balance}
+.copy p{margin:0 0 14px;max-width:58ch;color:var(--pearl-84)}
+.specs{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:9px}
+.specs li{position:relative;padding-left:22px;color:var(--pearl-84);font-size:16px;max-width:60ch}
+.specs li::before{content:"";position:absolute;left:2px;top:.55em;width:8px;height:8px;background:var(--solar);transform:rotate(45deg)}
+.specs b{font-weight:600;color:var(--pearl)}
+.dirs{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;font-size:15px;color:var(--pearl-55)}
+figure{margin:0}
+figcaption{margin-top:12px;font-size:15px;color:var(--pearl-55);max-width:70ch}
+
+/* the studio */
+.made{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;padding-block:48px 56px;border-top:1px solid rgba(104,69,213,.45)}
+.made img{width:128px;height:128px;image-rendering:pixelated}
+.socials{display:flex;flex-wrap:wrap;gap:8px 24px;margin:0;padding:0;list-style:none}
+.email{user-select:all;color:var(--pearl-84)}
+footer{padding-block:24px 32px;font-size:14px;color:var(--pearl-55);display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
+footer p{margin:0;max-width:72ch}
+footer a{color:var(--pearl-84)}
+
+@media (max-width:900px){
+  .hero-body,.section,.made{grid-template-columns:minmax(0,1fr)}
+  .section.flip .copy{order:0}
+  .made img{width:96px;height:96px}
+}
+@media (max-width:640px){.sky{height:30vh;min-height:170px}.hero-body{padding-top:48px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head><body>
+
+<header class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="sky"></div>
+  <div class="anchor" aria-hidden="true"></div>
+  <div class="hero-body pad">
+    <div>
+      <h1 class="wordmark"><span>Pixel</span><span>Blitz</span></h1>
+      <p class="intro">A free pixel-art workbench from Ghost Meridian. Turn any image into pixel art, then draw, rig, animate and build whole casts of characters for your game, in one browser page.</p>
+      <div class="actions">
+        <button class="plate" type="button" data-soon>Coming soon</button>
+        <a class="line-link" href="#convert">See what it does</a>
+      </div>
+      <p class="small">No install and no account: it runs in Chrome, Edge, Firefox and Safari, and works offline too. Follow Ghost Meridian to hear the moment it’s ready.</p>
+    </div>
+    <img class="shot" src="screenshots/portrait.webp" alt="A pixel-art character portrait built from Library parts, lit from the top left with a light dither" width="1440" height="900">
+  </div>
+</header>
+
+<main class="pad">
+  <ul class="tabs" aria-label="The six tabs">
+    <li><a class="line-link" href="#convert">Convert</a></li>
+    <li><a class="line-link" href="#draw">Draw</a></li>
+    <li><a class="line-link" href="#draw">Rig</a></li>
+    <li><a class="line-link" href="#draw">Animate</a></li>
+    <li><a class="line-link" href="#portrait">Portrait</a></li>
+    <li><a class="line-link" href="#library">Library</a></li>
+  </ul>
+
+  <section class="section" id="convert" aria-labelledby="convertTitle">
+    <div class="copy">
+      <span class="label">Convert</span>
+      <h2 id="convertTitle">Any image in, pixel art out</h2>
+      <p>Drop, paste or open a picture, a photo, a sketch or a screenshot, and pick a grid. Pixel Blitz samples it into clean cells and a tidy palette you can keep editing.</p>
+      <ul class="specs">
+        <li>Grids from <b>1</b> to <b>256</b> cells, with presets from 16² to 128²</li>
+        <li>Detect grid finds the real pixel size of upscaled or resized pixel art, even odd sizes like <b>7.3 px</b>, and gives you back one cell per pixel</li>
+        <li>Automatic palettes, Lospec presets, PICO-8, or your own <b>.hex</b> or <b>.gpl</b> file</li>
+        <li>Ordered or Floyd–Steinberg dither, clean-up, outlines and background removal</li>
+      </ul>
+    </div>
+    <img class="shot" src="screenshots/convert.webp" alt="The Convert tab turning a logo into a 32 by 40 pixel sprite" width="1440" height="900" loading="lazy">
+  </section>
+
+  <section class="section wide" id="draw" aria-labelledby="drawTitle">
+    <div class="copy">
+      <span class="label">Draw · Rig · Animate</span>
+      <h2 id="drawTitle">Paint it, pose it, play it</h2>
+      <p>Layers, a pixel-perfect pen and a palette that offers each colour's natural highlight and shadow. Give a sprite bones and pose it instead of redrawing every frame: parts turn cleanly and keep their outlines. Then lay out frames and tags with onion skin, and export straight into your game.</p>
+      <ul class="specs">
+        <li>Alt + scroll resizes the brush; hold Alt to pick a colour and go straight back to painting</li>
+        <li>Bones, inverse kinematics, mirrored poses and in-betweens, with hand fixes that stay on the part</li>
+        <li>GIF, PNG sheets and Godot <b>SpriteFrames</b>, one animation per tag</li>
+        <li>Versions (V1, V2…) side by side on a board, so you can try ideas without losing the original</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section flip" id="portrait" aria-labelledby="portraitTitle">
+    <div class="copy">
+      <span class="label">Portrait</span>
+      <h2 id="portraitTitle">Faces from parts, lit from any side</h2>
+      <p>Build characters from Library parts: heads, hair, eyes, mouths and accessories. Every part can have mood drawings, every colour role has variants, and Shuffle rolls a whole squad with no two alike.</p>
+      <p>Turn on lighting and the portrait is shaded from the direction you choose, with cast shadows, light along the shoulders and an optional dither. The parts themselves never change, so you draw them flat and let the light do the shading.</p>
+      <div class="dirs" aria-label="Light directions"><span>↖ Top left</span><span>↑ Top</span><span>↗ Top right</span><span>← Left</span><span>→ Right</span><span>↓ Below</span></div>
+    </div>
+    <img class="shot" src="screenshots/lighting.webp" alt="The lighting controls: direction pad, light height, shadow, highlight, cast shadow and dither" width="1440" height="900" loading="lazy">
+  </section>
+
+  <section class="section" id="library" aria-labelledby="libraryTitle">
+    <div class="copy">
+      <span class="label">Library</span>
+      <h2 id="libraryTitle">One kit for every project</h2>
+      <p>Every part you save is shared across your projects. Edit one and every portrait using it updates. Group colours into roles, recolour the whole Library at once, or see it through any palette as a look, without touching a pixel.</p>
+      <ul class="specs">
+        <li>Moods with fallbacks: a part with no angry drawing borrows its neutral one</li>
+        <li>Match moments map game events like <b>shooting</b> to the right mood</li>
+        <li>Export the kit for Godot and generate characters while the game runs</li>
+      </ul>
+    </div>
+    <img class="shot" src="screenshots/library.webp" alt="The Library tab with parts grouped by slot, colour roles and moods" width="1440" height="900" loading="lazy">
+  </section>
+
+  <section class="section wide" aria-labelledby="godotTitle">
+    <div class="copy">
+      <span class="label">In your game</span>
+      <h2 id="godotTitle">The same pixels in Godot</h2>
+      <p>The Godot character kit builds faces from the same parts, moods, colours and lighting, so what you see in Pixel Blitz is what your players see.</p>
+    </div>
+    <figure>
+      <img class="shot" src="screenshots/godot.png" alt="Eight lit portraits rendered in Pixel Blitz and in Godot, matching exactly" width="1592" height="392" loading="lazy">
+      <figcaption>Top row: Pixel Blitz. Bottom row: the Godot kit. Light from the top left, top, top right, right and below, then with dither, an angry mood and colour variants. Each pair is identical, pixel for pixel.</figcaption>
+    </figure>
+  </section>
+
+  <section class="section wide" aria-labelledby="claudeTitle">
+    <div class="copy">
+      <span class="label">With Claude</span>
+      <h2 id="claudeTitle">Hand Claude the busywork</h2>
+      <p>Press Connect Claude and Claude can read and edit your sprites, import frames, build portraits and export into your project. It runs on your own Claude account, and Pixel Blitz never asks for an API key.</p>
+    </div>
+  </section>
+
+  <section class="made" aria-labelledby="madeTitle">
+    <img src="screenshots/gm-icon.png" alt="The Ghost Meridian ghost on its meridian" width="128" height="128">
+    <div class="copy">
+      <span class="label">Made by Ghost Meridian</span>
+      <h2 id="madeTitle">The independent game studio</h2>
+      <p>Pixel Blitz is on its way, and it will be free. Follow along to hear the moment it’s ready. Join our Steam group to hear about upcoming games first!</p>
+      <div class="actions">
+        <a class="plate" href="https://steamcommunity.com/groups/GhostMeridianGames" target="_blank" rel="noopener">Join us on Steam</a>
+        <ul class="socials" aria-label="Ghost Meridian elsewhere">
+          <li><a class="line-link" href="https://ghostmeridian.itch.io" target="_blank" rel="noopener">itch.io</a></li>
+          <li><a class="line-link" href="https://bsky.app/profile/ghostmeridiangames.bsky.social" target="_blank" rel="noopener">Bluesky</a></li>
+          <li><a class="line-link" href="https://www.instagram.com/ghostmeridiangames/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a class="line-link" href="https://www.tiktok.com/@ghostmeridiangames" target="_blank" rel="noopener">TikTok</a></li>
+          <li><a class="line-link" href="https://x.com/Ghost_Meridian" target="_blank" rel="noopener">X</a></li>
+        </ul>
+      </div>
+      <p class="small">Say hello: <span class="email">hello@ghostmeridian.games</span></p>
+    </div>
+  </section>
+</main>
+
+<footer class="pad">
+  <p>Pixel Blitz is coming soon. It will be free to use, for personal and commercial work, and what you make with it will be yours.</p>
+  <p>© 2026 <a class="line-link" href="https://ghostmeridian.games/">Ghost Meridian</a></p>
+</footer>
+
+<dialog class="soon" id="soon" aria-labelledby="soonTitle"><div class="soon-in">
+  <form method="dialog" class="soon-close"><button type="submit" aria-label="Close" autofocus>×</button></form>
+  <img class="soon-logo" src="screenshots/gm-logo.png" alt="Ghost Meridian" width="336" height="128">
+  <span class="label">Coming soon</span>
+  <h2 id="soonTitle">Pixel Blitz is on its way</h2>
+  <p>Pixel Blitz will be free, from <b>Ghost Meridian</b>, the independent game studio.</p>
+  <p class="dim">Follow along to hear the moment it’s ready. Join our Steam group to hear about upcoming games first!</p>
+  <div class="actions">
+    <a class="plate" href="https://steamcommunity.com/groups/GhostMeridianGames" target="_blank" rel="noopener">Join us on Steam</a>
+    <ul class="socials" aria-label="Ghost Meridian elsewhere">
+      <li><a class="line-link" href="https://ghostmeridian.itch.io" target="_blank" rel="noopener">itch.io</a></li>
+      <li><a class="line-link" href="https://bsky.app/profile/ghostmeridiangames.bsky.social" target="_blank" rel="noopener">Bluesky</a></li>
+      <li><a class="line-link" href="https://www.instagram.com/ghostmeridiangames/" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a class="line-link" href="https://www.tiktok.com/@ghostmeridiangames" target="_blank" rel="noopener">TikTok</a></li>
+      <li><a class="line-link" href="https://x.com/Ghost_Meridian" target="_blank" rel="noopener">X</a></li>
+    </ul>
+  </div>
+  <p class="small"><a class="line-link" href="https://ghostmeridian.games/">ghostmeridian.games</a> · <span class="email">hello@ghostmeridian.games</span></p>
+</div></dialog>
+<script>
+/* Coming soon: the button opens the studio card (a native dialog, so focus, Escape and the backdrop come for free) */
+(() => {
+  const dlg = document.getElementById('soon');
+  if (!dlg) return;
+  document.querySelectorAll('[data-soon]').forEach(b => b.addEventListener('click', () => {
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  }));
+  dlg.addEventListener('click', e => { if (e.target === dlg) { const r = dlg.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close(); } });   // a click on the backdrop closes it
+})();
+</script>
+
+<script>
+/* The studio home page's field: an ordered-dither glow pooling on the meridian line, motes rising off it, and the
+   diamond where the line lands. A still frame with reduced motion. */
+(() => {
+  const canvas = document.getElementById('field'), hero = document.querySelector('.hero'), anchor = document.querySelector('.anchor');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d'), bg = document.createElement('canvas'), bctx = bg.getContext('2d');
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)'); let reduce = mq.matches, raf = null;
+  const PAL = { void: [40, 32, 79], deep: [27, 21, 56], violet: [104, 69, 213], plasma: [36, 143, 208], solar: [255, 189, 84], pearl: [231, 229, 245] };
+  const css = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + .5) / 16);
+  let PX, W, H, lineY, dX, R, spreadUp, motes = [];
+  const start = performance.now(); let last = start;
+  function layout() {
+    PX = window.innerWidth < 640 ? 3 : 4;
+    W = Math.max(1, Math.ceil(hero.clientWidth / PX)); H = Math.max(1, Math.ceil(hero.clientHeight / PX));
+    canvas.width = bg.width = W; canvas.height = bg.height = H;
+    lineY = Math.round(anchor.offsetTop / PX); dX = Math.round(W * (W * PX < 640 ? .78 : .7)); R = PX === 3 ? 6 : 8;
+    spreadUp = Math.max(16, lineY * .42);
+    const img = bctx.createImageData(W, H), d = img.data, spreadP = Math.max(4, lineY * .07), spreadDown = Math.max(3, spreadUp * .12), spreadX = W * .36;
+    for (let y = 0; y < H; y++) {
+      const above = y <= lineY, dy = Math.abs(y - lineY), sky = above ? Math.pow((lineY - y) / Math.max(1, lineY), 1.6) * .6 : 0;
+      for (let x = 0; x < W; x++) {
+        const t = BAYER[(y & 3) * 4 + (x & 3)], pool = .4 + .6 * Math.exp(-Math.pow((x - dX) / spreadX, 2));
+        const p = Math.exp(-dy / (above ? spreadP : spreadP * .5)) * pool * .62, v = Math.exp(-dy / (above ? spreadUp : spreadDown)) * pool * .5;
+        const c = p > t ? PAL.plasma : v > t ? PAL.violet : sky > t ? PAL.deep : PAL.void, i = (y * W + x) * 4;
+        d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
+      }
+    }
+    bctx.putImageData(img, 0, 0);
+    motes = Array.from({ length: Math.min(70, Math.round((W * lineY) / 500)) }, () => mote(true));
+  }
+  function mote(anywhere) {
+    const r = Math.random();
+    return { x: Math.random() * W, y: anywhere ? lineY - Math.random() * spreadUp * 1.5 : lineY - 2 - Math.random() * 6, vy: 1.2 + Math.random() * 3.5, drift: (Math.random() - .5) * .6, phase: Math.random() * 6.28, rate: .8 + Math.random() * 1.6, c: r < .2 ? PAL.pearl : r < .65 ? PAL.violet : PAL.plasma };
+  }
+  function frame(now) {
+    raf = null; const t = (now - start) / 1000, dt = Math.min(.05, (now - last) / 1000); last = now;
+    ctx.drawImage(bg, 0, 0);
+    for (const m of motes) {
+      if (!reduce) { m.y -= m.vy * dt; m.x += m.drift * dt; if (m.y < lineY - spreadUp * 1.6 || m.y < 0) Object.assign(m, mote(false)); }
+      if (Math.sin(t * m.rate + m.phase) > -.35) { ctx.fillStyle = css(m.c); ctx.fillRect(Math.round(m.x), Math.round(m.y), 1, 1); }
+    }
+    const lx = Math.round(W * Math.floor((reduce ? 1 : Math.min(1, t / 1.1)) * 28) / 28);
+    ctx.fillStyle = css(PAL.plasma); ctx.fillRect(0, lineY - 1, lx, 1); ctx.fillRect(0, lineY + 1, lx, 1);
+    ctx.fillStyle = css(PAL.pearl); ctx.fillRect(0, lineY, lx, 1);
+    ctx.fillStyle = css(PAL.violet); for (let x = 6; x < lx; x += 20) ctx.fillRect(x, lineY + 3, 1, 2);
+    if (lx >= dX) {
+      for (let dy = -R; dy <= R; dy++) { const w = R - Math.abs(dy), y = lineY + dy; ctx.fillStyle = css(PAL.void); ctx.fillRect(dX - w, y, w * 2 + 1, 1); ctx.fillStyle = css(PAL.solar); ctx.fillRect(dX - w, y, 1, 1); ctx.fillRect(dX + w, y, 1, 1); }
+      ctx.fillStyle = css(reduce || Math.floor(t / 1.2) % 2 === 0 ? PAL.pearl : PAL.plasma);
+      for (let dy = -2; dy <= 2; dy++) { const w = 2 - Math.abs(dy); ctx.fillRect(dX - w, lineY + dy, w * 2 + 1, 1); }
+    }
+    if (!reduce) raf = requestAnimationFrame(frame);
+  }
+  let pending = false;
+  const onResize = () => { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; layout(); if (reduce) frame(performance.now()); }); };
+  if (mq.addEventListener) mq.addEventListener('change', e => { reduce = e.matches; if (raf !== null) cancelAnimationFrame(raf); last = performance.now(); frame(last); });
+  layout(); if (reduce) frame(performance.now()); else raf = requestAnimationFrame(frame);
+  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(hero); else window.addEventListener('resize', onResize);
+})();
+</script>
+
+</body></html>
