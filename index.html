@@ -173,7 +173,7 @@
     }
     .wordmark span + span { animation-delay: 1.3s; }
 
-    .intro, .actions, footer {
+    .intro, .actions, footer, .tabs {
       opacity: 0;
       animation: arrive 0.4s steps(4, end) forwards;
       animation-delay: 2s;
@@ -188,11 +188,82 @@
     .content { gap: 24px; padding-top: 36px; }
     .socials { gap: 8px 18px; }
   }
+
+  /* Room under the meridian, and the wordmark lined up with the text below.
+     Silkscreen draws each letter 0.12em in from its edge, so the name steps
+     back by that much. */
+  .content { padding-top: clamp(56px, 7.5vw, 112px); }
+  .wordmark { margin-left: -0.12em; }
+
+  /* Studio tabs, top right over the sky. Each tab is a cut-corner frame:
+     a Violet edge (::before) with deep Void inside it (::after); the edge
+     turns Solar on hover, like the links. */
+  .tabs {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 0;
+    padding: 24px var(--gutter) 0;
+    list-style: none;
+  }
+
+  .tab {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px 10px 16px;
+    font-family: "Silkscreen", "Chakra Petch", monospace;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+  }
+
+  .tab::before,
+  .tab::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  }
+
+  .tab::before { inset: 0; background: var(--violet); }
+  .tab::after { inset: 2px; background: var(--void-deep); }
+  .tab:hover::before { background: var(--solar); }
+
+  .tab-tag {
+    padding: 3px 7px;
+    font-family: "Chakra Petch", system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: var(--void);
+    background: var(--solar);
+  }
+
+  @media (max-width: 640px) {
+    .content { padding-top: 48px; }
+    .tabs { padding-top: 16px; }
+    .tab { font-size: 13px; padding: 8px 10px 8px 12px; gap: 10px; }
+  }
 </style>
 </head>
 <body>
   <main class="hero">
     <canvas id="field" aria-hidden="true"></canvas>
+
+    <nav aria-label="Ghost Meridian">
+      <ul class="tabs">
+        <li><a class="tab" href="/pixelblitz/">Pixel Blitz <span class="tab-tag">Coming soon</span></a></li>
+      </ul>
+    </nav>
     <div class="sky"></div>
     <div class="anchor" aria-hidden="true"></div>
 
