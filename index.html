@@ -234,7 +234,9 @@
   const anchor = document.querySelector('.anchor');
   const bg = document.createElement('canvas');
   const bctx = bg.getContext('2d');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce = motionPreference.matches;
+  let animationFrame = null;
 
   const PAL = {
     void:   [40, 32, 79],
@@ -248,6 +250,7 @@
 
   // 4x4 ordered dither
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
+  const dith = (x, y) => BAYER[(y & 3) * 4 + (x & 3)];
 
   let PX, W, H, lineY, dX, R, spreadUp, motes = [];
   const start = performance.now();
@@ -312,26 +315,124 @@
     motes = Array.from({ length: n }, () => newMote(true));
   }
 
-  function drawDiamond(t) {
+  function px(x, y, c) {
+    ctx.fillStyle = css(c);
+    ctx.fillRect(x, y, 1, 1);
+  }
+
+  // flash: 0 normal; 1 the moment the line strikes (lit plate, pearl rim);
+  // 2 the after-glow (a larger pearl core)
+  function drawDiamond(t, flash) {
     for (let dy = -R; dy <= R; dy++) {
       const w = R - Math.abs(dy);
       const y = lineY + dy;
-      ctx.fillStyle = css(PAL.void);
+      ctx.fillStyle = css(flash === 1 ? PAL.solar : PAL.void);
       ctx.fillRect(dX - w, y, w * 2 + 1, 1);
-      ctx.fillStyle = css(PAL.solar);
+      ctx.fillStyle = css(flash === 1 ? PAL.pearl : PAL.solar);
       ctx.fillRect(dX - w, y, 1, 1);
       ctx.fillRect(dX + w, y, 1, 1);
     }
     // Core: a slow two-step pulse
     const on = reduce || Math.floor(t / 1.2) % 2 === 0;
-    ctx.fillStyle = css(on ? PAL.pearl : PAL.plasma);
-    for (let dy = -2; dy <= 2; dy++) {
-      const w = 2 - Math.abs(dy);
+    ctx.fillStyle = css(flash ? PAL.pearl : (on ? PAL.pearl : PAL.plasma));
+    const cr = flash === 2 ? 3 : 2;
+    for (let dy = -cr; dy <= cr; dy++) {
+      const w = cr - Math.abs(dy);
       ctx.fillRect(dX - w, lineY + dy, w * 2 + 1, 1);
     }
   }
 
+  // The strike: when the meridian reaches the diamond, a flattened ring of
+  // light spreads out and dithers away, a flare runs along the line (and
+  // briefly up and down), and sparks fly off and fade pixel by pixel.
+  // Sizes follow the diamond's radius, so it scales with PX; the timing is
+  // stepped at 20 frames a second, like the rest of the motion.
+  let strikeT = null, sparks = [];
+
+  function spawnSparks() {
+    const k = R / 8;
+    sparks = Array.from({ length: 34 }, () => {
+      const a = Math.random() * Math.PI * 2;
+      const s = (28 + Math.random() * 62) * k;
+      const r = Math.random();
+      return {
+        x: dX + Math.cos(a) * 3,
+        y: lineY + Math.sin(a) * 3,
+        vx: Math.cos(a) * s * 1.5,
+        vy: Math.sin(a) * s * 0.75 - 6 * k,
+        life: 0.55 + Math.random() * 0.75,
+        age: 0,
+        c: r < 0.3 ? PAL.pearl : r < 0.65 ? PAL.solar : PAL.plasma,
+        tail: Math.random() < 0.45
+      };
+    });
+  }
+
+  function drawStrike(t) {
+    const a = Math.floor((t - strikeT) * 20) / 20;
+    // the ring
+    if (a < 0.75) {
+      const k = a / 0.75;
+      const r = R + 2 + Math.round(k * R * 4.25);
+      const fade = 1 - k;
+      const c = a < 0.18 ? PAL.pearl : a < 0.4 ? PAL.solar : a < 0.58 ? PAL.plasma : PAL.violet;
+      for (let i = 0; i <= r; i++) {
+        const ox = i;
+        const oy = Math.round((r - i) * 0.6);
+        for (const [x, y] of [[dX + ox, lineY - oy], [dX - ox, lineY - oy], [dX + ox, lineY + oy], [dX - ox, lineY + oy]]) {
+          if (y >= 0 && y < H && dith(x, y) < fade) px(x, y, c);
+        }
+      }
+    }
+    // the flare along the line, and a shorter one up and down
+    if (a < 0.5) {
+      const L = Math.round(Math.sin(Math.PI * a / 0.5) * R * 8.75);
+      const V = Math.round(L * 0.22);
+      for (let d = R + 1; d <= R + L; d++) {
+        const f = 1 - (d - R) / Math.max(1, L);
+        const c = f > 0.6 ? PAL.pearl : PAL.solar;
+        if (dith(dX + d, lineY) < f + 0.15) px(dX + d, lineY, c);
+        if (dith(dX - d, lineY) < f + 0.15) px(dX - d, lineY, c);
+        if (f > 0.5) {
+          if (dith(dX + d, lineY - 1) < f - 0.3) px(dX + d, lineY - 1, PAL.solar);
+          if (dith(dX - d, lineY + 1) < f - 0.3) px(dX - d, lineY + 1, PAL.solar);
+        }
+      }
+      for (let d = R + 1; d <= R + V; d++) {
+        const f = 1 - (d - R) / Math.max(1, V);
+        const c = f > 0.5 ? PAL.pearl : PAL.solar;
+        if (dith(dX, lineY - d) < f + 0.1) px(dX, lineY - d, c);
+        if (dith(dX, lineY + d) < f + 0.1) px(dX, lineY + d, c);
+      }
+    }
+    return a;
+  }
+
+  function drawSparks(dt) {
+    for (const s of sparks) {
+      if (s.age >= s.life) continue;
+      s.age += dt;
+      const drag = Math.pow(0.12, dt);   // they slow quickly
+      s.vx *= drag;
+      s.vy = s.vy * drag - 10 * (R / 8) * dt;   // and drift up a touch, like the motes
+      const ox = s.x, oy = s.y;
+      s.x += s.vx * dt;
+      s.y += s.vy * dt;
+      const left = 1 - s.age / s.life;
+      const x = Math.round(s.x), y = Math.round(s.y);
+      if (dith(x, y) < left + 0.1 && (left > 0.35 || Math.floor(s.age * 20) % 2 === 0)) {
+        px(x, y, left < 0.3 ? PAL.violet : s.c);
+        if (s.tail && left > 0.5) {
+          const tx = Math.round((ox + s.x) / 2 - s.vx * 0.02);
+          const ty = Math.round((oy + s.y) / 2 - s.vy * 0.02);
+          if (tx !== x || ty !== y) px(tx, ty, PAL.plasma);
+        }
+      }
+    }
+  }
+
   function frame(now) {
+    animationFrame = null;
     const t = (now - start) / 1000;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
@@ -363,9 +464,21 @@
     ctx.fillStyle = css(PAL.violet);
     for (let x = 6; x < lx; x += 20) ctx.fillRect(x, lineY + 3, 1, 2);
 
-    if (lx >= dX) drawDiamond(t);
+    // The strike, once, as the line reaches the diamond (not with reduced motion)
+    if (lx >= dX && strikeT === null && !reduce) {
+      strikeT = t;
+      spawnSparks();
+    }
+    let flash = 0;
+    if (strikeT !== null && !reduce) {
+      const a = drawStrike(t);
+      flash = a < 0.12 ? 1 : a < 0.45 ? 2 : 0;
+    }
 
-    if (!reduce) requestAnimationFrame(frame);
+    if (lx >= dX) drawDiamond(t, flash);
+    if (strikeT !== null && !reduce) drawSparks(dt);
+
+    if (!reduce) animationFrame = requestAnimationFrame(frame);
   }
 
   let pending = false;
@@ -379,9 +492,17 @@
     });
   }
 
+  motionPreference.addEventListener('change', event => {
+    reduce = event.matches;
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    if (reduce) sparks = [];
+    last = performance.now();
+    frame(last);
+  });
+
   layout();
   if (reduce) frame(performance.now());
-  else requestAnimationFrame(frame);
+  else animationFrame = requestAnimationFrame(frame);
 
   if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(hero);
   else window.addEventListener('resize', onResize);
