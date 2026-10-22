@@ -1,0 +1,182 @@
+/* Ghost Meridian homepage. Layout only: colours, type and components come from tokens.css and components.css. */
+
+:root {
+  --max: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  /* Lines content up with the masthead logo at every width */
+  --edge: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+}
+
+* { box-sizing: border-box; }
+html { background: var(--surface); scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { font-size: 18px; line-height: 1.5; overflow-x: hidden; }
+img { max-width: 100%; }
+
+.wrap { padding-inline: var(--edge); }
+
+.skip-link { position: absolute; left: var(--gutter); top: -100px; z-index: 10; padding: 8px 14px; background: var(--accent); color: var(--on-accent); font-weight: 500; text-decoration: none; }
+.skip-link:focus { top: 12px; outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* Masthead: the logo top left, its horizon carried to the page edge, section links above the line */
+.site-top { padding-top: var(--space-8); }
+.site-top .gm-masthead { padding-inline: var(--edge); }
+/* masthead-vars */
+.site-top .gm-masthead { --gm-logo-h: 56px; --gm-line-top: 42.91px; --gm-line-h: 2.68px; }
+@media (max-width: 420px) { .site-top .gm-masthead { --gm-logo-h: 44px; --gm-line-top: 33.71px; --gm-line-h: 2.11px; } }
+/* end masthead-vars */
+.site-nav { gap: var(--space-1) var(--space-6); padding-top: 4px; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: none; font: 500 16px/1.25 var(--font-sans); transition: color 140ms ease; }
+.site-nav a:hover { color: var(--accent-text); }
+.site-nav a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+/* Hero: a dithered twilight sky that ends on the meridian */
+.hero { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: clamp(560px, 76vh, 780px); }
+.hero-sky, .hero-fx { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; pointer-events: none; }
+.hero-sky { z-index: -1; }
+.hero-fx { z-index: 2; }
+.hero-copy { position: relative; z-index: 1; padding-top: clamp(56px, 10vh, 120px); }
+.hero-title { margin: 0; max-width: 15em; font: 700 clamp(44px, 5.4vw, 64px)/0.98 var(--font-sans); letter-spacing: -0.02em; text-wrap: balance; }
+.hero-lead { margin: var(--space-6) 0 0; max-width: 34em; font-size: 20px; line-height: 1.5; color: var(--ink); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-8); }
+
+.hero-horizon { position: relative; z-index: 1; margin-top: auto; padding-top: var(--space-16); padding-bottom: 96px; }
+.hero-horizon .gm-meridian { height: 56px; --dsize: 52px; }
+.hero-horizon .gm-meridian-reflections { top: calc(50% + var(--dsize) / 2 + 6px); }
+.hero-horizon .gm-meridian-reflections span:nth-child(1) { margin-top: 0; }
+@media (max-width: 639px) { .hero-horizon .gm-meridian { --dsize: 39px; } }
+
+/* Before the load moment runs, the line and its marker wait; without JavaScript they simply show */
+.js-horizon .gm-meridian-line { clip-path: inset(0 100% 0 0); }
+.js-horizon .gm-meridian-marker, .js-horizon .gm-meridian-reflections { visibility: hidden; }
+.horizon-done .gm-meridian-marker, .horizon-done .gm-meridian-reflections,
+.marker-on .gm-meridian-marker, .marker-on .gm-meridian-reflections { visibility: visible; }
+
+/* Sections */
+.section { padding-block: var(--space-24); }
+.hero + .section { padding-top: var(--space-12); }
+.section + .section { padding-top: 0; }
+.section-head { margin-bottom: var(--space-12); }
+.section-title { margin: 0; font: 700 clamp(36px, 4vw, 48px)/1 var(--font-sans); letter-spacing: -0.015em; }
+.section-lead { margin: var(--space-4) 0 0; max-width: 36em; font-size: 20px; color: var(--ink-muted); }
+
+#games .gm-card-text { max-width: 30em; }
+
+.tools-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--space-6); align-items: stretch; }
+.tools-grid > .gm-card { margin-bottom: 9px; }
+
+/* About */
+.about { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+.about-text .section-title { margin-bottom: var(--space-6); }
+.about-text p { margin: 0 0 var(--space-4); max-width: 36em; color: var(--ink-muted); }
+.about-text .about-lead { font-size: 20px; color: var(--ink); }
+.about-art { margin: 0; display: flex; justify-content: center; }
+.about-art img { width: 128px; height: 128px; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+/* Footer: follow along */
+.site-foot { padding-block: var(--space-16) var(--space-8); border-top: 1px solid var(--line); }
+.follow { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-8) var(--space-12); flex-wrap: wrap; }
+.follow-title { margin: 0; font: 500 28px/1.2 var(--font-sans); }
+.follow-text { margin: var(--space-3) 0 0; max-width: 32em; color: var(--ink-muted); }
+.follow .gm-socials { max-width: 560px; gap: var(--space-3) var(--space-6); }
+.follow .gm-social { min-height: 32px; }
+.foot-base { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-16); font-size: 14px; color: var(--ink-muted); }
+.foot-ident { display: inline-flex; width: 40px; }
+.foot-ident .gm-logo { width: 40px; }
+
+@media (max-width: 899px) {
+  .tools-grid { grid-template-columns: minmax(0, 1fr); }
+  .about { grid-template-columns: minmax(0, 1fr); }
+  .about-art { justify-content: flex-start; order: -1; }
+  .about-art img { width: 96px; height: 96px; }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 17px; }
+  .site-top { padding-top: var(--space-4); }
+  .site-top .gm-masthead { flex-direction: column-reverse; align-items: stretch; gap: var(--space-2); }
+  .site-nav { justify-content: flex-start; gap: 0 var(--space-6); padding-top: 0; }
+  .site-top .gm-masthead-line { top: auto; bottom: calc(var(--gm-logo-h) - var(--gm-line-top) - var(--gm-line-h)); }
+  .hero { min-height: 600px; }
+  .hero-copy { padding-top: var(--space-12); }
+  .hero-lead, .section-lead, .about-text .about-lead { font-size: 18px; }
+  .hero-horizon { padding-bottom: 88px; }
+  .section { padding-block: var(--space-16); }
+  .section-head { margin-bottom: var(--space-8); }
+}
+
+/* ---------- Tool pages (Pixel Blitz) ---------- */
+.site-nav a[aria-current="page"] { color: var(--accent-text); }
+
+.tool-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-12); padding-block: var(--space-16) var(--space-8); }
+.tool-intro { max-width: 760px; }
+.tool-intro { min-width: 0; }
+.tool-kicker { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
+.tool-hero .hero-title { font-size: clamp(48px, 6vw, 72px); }
+.tool-note { margin: var(--space-6) 0 0; max-width: 30em; font-size: 15px; color: var(--ink-muted); }
+.tool-jump { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+.tool-jump a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-muted); text-decoration: none; font: 500 15px/1.25 var(--font-sans); transition: color 140ms ease; }
+.tool-jump a:hover { color: var(--accent-text); }
+.tool-jump a:focus-visible, .foot-home:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+/* Screenshots sit in Pixel Step frames on an Afterglow line */
+.shot { min-width: 0; }
+.shot .gm-card-media { aspect-ratio: 16 / 10; max-width: 100%; }
+.shot .gm-card-media img { object-position: left top; }
+
+.tool-divider { padding-block: var(--space-4) var(--space-8); }
+.tool-divider .gm-meridian { height: 72px; }
+
+.feature { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-12); align-items: center; padding-block: var(--space-16); scroll-margin-top: var(--space-6); }
+.feature-flip .feature-text { order: 2; }
+.feature-text { min-width: 0; }
+.feature-text .gm-eyebrow { display: block; margin-bottom: var(--space-3); color: var(--accent-text); }
+.feature-title { margin: 0 0 var(--space-4); font: 700 clamp(30px, 3.2vw, 40px)/1.1 var(--font-sans); letter-spacing: -0.01em; text-wrap: balance; }
+.feature-text p { margin: 0 0 var(--space-4); max-width: 34em; color: var(--ink-muted); }
+.feature-list { list-style: none; margin: var(--space-6) 0 0; padding: 0; display: grid; gap: var(--space-3); max-width: 34em; }
+.feature-list li { position: relative; padding-left: 22px; font-size: 16px; color: var(--ink); }
+/* A small pixel diamond as the bullet */
+.feature-list li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 8px; height: 8px; background: var(--afterglow); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+
+.godot { padding-block: var(--space-16); scroll-margin-top: var(--space-6); }
+.godot-head { max-width: 40em; margin-bottom: var(--space-8); }
+.godot-head .gm-eyebrow { display: block; margin-bottom: var(--space-3); color: var(--accent-text); }
+.godot-head p { margin: 0; color: var(--ink-muted); }
+.godot-strip { margin: 0; }
+.godot-strip img { display: block; width: 100%; height: auto; border-bottom: 4px solid var(--afterglow); }
+.godot-strip figcaption { margin-top: var(--space-4); max-width: 46em; font-size: 14px; color: var(--ink-muted); }
+
+.tool-close { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-8); flex-wrap: wrap; padding-block: var(--space-16) var(--space-24); }
+.tool-close > div:first-child { min-width: 0; }
+.tool-licence { margin: var(--space-4) 0 0; font-size: 14px; color: var(--ink-muted); }
+.foot-home { color: inherit; text-decoration: none; }
+.foot-home:hover { color: var(--accent-text); }
+
+/* The follow card */
+/* On short or zoomed screens the card scrolls inside the dialog, so the close button and the lower links stay reachable */
+.follow-dialog { width: min(520px, calc(100% - 32px)); max-width: none; max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); padding: 0; border: 0; background: transparent; color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
+.follow-dialog::backdrop { background: rgba(10, 12, 20, 0.72); }
+.follow-dialog .gm-card { margin: 0 9px 9px 0; }
+.follow-dialog .gm-card-body { gap: var(--space-4); padding: var(--space-8); }
+.follow-dialog .gm-socials { gap: var(--space-2) var(--space-6); margin-top: var(--space-2); }
+.dialog-close { position: absolute; top: var(--space-3); right: var(--space-3); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; background: none; color: var(--ink); cursor: pointer; border-radius: var(--radius-sm); }
+.dialog-close:hover { color: var(--accent-text); }
+.dialog-close:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; }
+.dialog-ident { width: 72px; }
+.dialog-ident .gm-logo { width: 72px; }
+.dialog-title { margin: 0; font: 700 28px/1.15 var(--font-sans); }
+.follow-dialog .gm-button { align-self: flex-start; }
+.follow-dialog .gm-card-text { margin: 0; }
+
+@media (max-width: 899px) {
+  .feature { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  .tool-hero { gap: var(--space-8); }
+  .feature-flip .feature-text { order: 0; }
+  .tool-jump { gap: 0 var(--space-6); }
+}
+@media (max-width: 640px) {
+  .tool-hero { padding-top: var(--space-12); }
+  .feature, .godot { padding-block: var(--space-12); }
+  .tool-close { padding-bottom: var(--space-16); }
+  .follow-dialog .gm-card-body { padding: var(--space-6); }
+}
