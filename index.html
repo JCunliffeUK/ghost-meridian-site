@@ -4,581 +4,166 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ghost Meridian</title>
-<meta name="description" content="Ghost Meridian is an independent games studio. Our first game is in development.">
-<meta name="theme-color" content="#28204F">
+<meta name="description" content="Ghost Meridian is an independent game studio making original 2D and 2.5D games. Our first game is in development.">
+<meta name="theme-color" content="#171B2B">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ghostmeridian.games/">
 <meta property="og:title" content="Ghost Meridian">
-<meta property="og:description" content="An independent games studio. Our first game is in development.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%2328204F'/%3E%3Cpath d='M8 1L15 8L8 15L1 8Z' fill='%23FFBD54'/%3E%3Cpath d='M8 4L12 8L8 12L4 8Z' fill='%2328204F'/%3E%3Crect x='7' y='7' width='2' height='2' fill='%23E7E5F5'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&family=Silkscreen&display=swap" rel="stylesheet">
-<style>
-  :root {
-    /* Ghost Meridian colours */
-    --void: #28204F;
-    --void-deep: #1B1538;
-    --violet: #6845D5;
-    --plasma: #248FD0;
-    --solar: #FFBD54;
-    --pearl: #E7E5F5;
-    --gutter: clamp(20px, 6vw, 96px);
-    --cut: 10px;
-  }
-
-  * { box-sizing: border-box; }
-
-  html, body {
-    margin: 0;
-    background: var(--void);
-    color: var(--pearl);
-  }
-
-  body {
-    font-family: "Chakra Petch", system-ui, sans-serif;
-    font-size: 18px;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  #field {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-    z-index: 0;
-  }
-
-  .sky {
-    flex: none;
-    height: 42vh;
-    height: 42svh;
-    min-height: 240px;
-  }
-
-  .anchor { height: 0; }
-
-  .content {
-    position: relative;
-    z-index: 1;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 40px var(--gutter) 28px;
-  }
-
-  .wordmark {
-    margin: 0;
-    font-family: "Silkscreen", "Chakra Petch", monospace;
-    font-weight: 400;
-    font-size: clamp(50px, 10vw, 128px);
-    line-height: 0.86;
-    letter-spacing: -0.01em;
-    color: var(--pearl);
-  }
-
-  .wordmark span { display: block; }
-
-  .intro {
-    margin: 0;
-    max-width: 36ch;
-    font-size: clamp(17px, 1.5vw, 20px);
-    color: rgba(231, 229, 245, 0.84);
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px 32px;
-  }
-
-  a {
-    color: var(--pearl);
-    text-decoration: none;
-  }
-
-  a:focus-visible {
-    outline: 2px solid var(--solar);
-    outline-offset: 4px;
-  }
-
-  /* Primary action: a cut-corner plate, drawn on a pseudo-element so the
-     focus outline isn't clipped away */
-  .email {
-    position: relative;
-    isolation: isolate;
-    display: inline-block;
-    padding: 12px 20px;
-    font-weight: 600;
-    color: var(--void);
-  }
-
-  .email::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--solar);
-    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
-  }
-
-  .email:hover::before { background: var(--pearl); }
-
-  .socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .socials a {
-    border-bottom: 2px solid var(--violet);
-    padding-bottom: 2px;
-  }
-
-  .socials a:hover {
-    color: var(--solar);
-    border-color: var(--solar);
-  }
-
-  footer {
-    margin-top: auto;
-    padding-top: 24px;
-    font-size: 14px;
-    color: rgba(231, 229, 245, 0.55);
-  }
-
-  /* One load moment: the meridian draws across, then the name resolves */
-  @media (prefers-reduced-motion: no-preference) {
-    .wordmark span {
-      clip-path: inset(0 100% 0 0);
-      animation: resolve 0.8s steps(12, end) forwards;
-      animation-delay: 1.15s;
-    }
-    .wordmark span + span { animation-delay: 1.3s; }
-
-    .intro, .actions, footer, .tabs {
-      opacity: 0;
-      animation: arrive 0.4s steps(4, end) forwards;
-      animation-delay: 2s;
-    }
-  }
-
-  @keyframes resolve { to { clip-path: inset(0 0 0 0); } }
-  @keyframes arrive { to { opacity: 1; } }
-
-  @media (max-width: 640px) {
-    .sky { height: 40vh; height: 40svh; min-height: 220px; }
-    .content { gap: 24px; padding-top: 36px; }
-    .socials { gap: 8px 18px; }
-  }
-
-  /* Room under the meridian, and the wordmark lined up with the text below.
-     Silkscreen draws each letter 0.12em in from its edge, so the name steps
-     back by that much. */
-  .content { padding-top: clamp(56px, 7.5vw, 112px); }
-  .wordmark { margin-left: -0.12em; }
-
-  /* Studio tabs, top right over the sky. Each tab is a cut-corner frame:
-     a Violet edge (::before) with deep Void inside it (::after); the edge
-     turns Solar on hover, like the links. */
-  .tabs {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 12px;
-    margin: 0;
-    padding: 24px var(--gutter) 0;
-    list-style: none;
-  }
-
-  .tab {
-    position: relative;
-    isolation: isolate;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px 10px 16px;
-    font-family: "Silkscreen", "Chakra Petch", monospace;
-    font-size: 15px;
-    letter-spacing: 0.04em;
-  }
-
-  .tab::before,
-  .tab::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
-  }
-
-  .tab::before { inset: 0; background: var(--violet); }
-  .tab::after { inset: 2px; background: var(--void-deep); }
-  .tab:hover::before { background: var(--solar); }
-
-  .tab-tag {
-    padding: 3px 7px;
-    font-family: "Chakra Petch", system-ui, sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    color: var(--void);
-    background: var(--solar);
-  }
-
-  @media (max-width: 640px) {
-    .content { padding-top: 48px; }
-    .tabs { padding-top: 16px; }
-    .tab { font-size: 13px; padding: 8px 10px 8px 12px; gap: 10px; }
-  }
-</style>
+<meta property="og:description" content="An independent game studio making original 2D and 2.5D games. Our first game is in development.">
+<meta property="og:image" content="https://ghostmeridian.games/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Ghost Meridian logo above a pixel-art horizon at dusk.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/Rubik-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Rubik-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<script>
+  // Hold the meridian back for its load moment; if the script never runs, show it anyway
+  (function (d) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    d.classList.add('js-horizon');
+    setTimeout(function () { if (!d.classList.contains('horizon-done')) { d.classList.remove('js-horizon'); d.classList.add('horizon-done'); } }, 4000);
+  })(document.documentElement);
+</script>
 </head>
 <body>
-  <main class="hero">
-    <canvas id="field" aria-hidden="true"></canvas>
+<a class="skip-link" href="#main">Skip to content</a>
 
-    <nav aria-label="Ghost Meridian">
-      <ul class="tabs">
-        <li><a class="tab" href="/pixelblitz/">Pixel Blitz <span class="tab-tag">Coming soon</span></a></li>
-      </ul>
+<header class="site-top">
+  <div class="gm-masthead">
+    <span class="gm-masthead-line" aria-hidden="true"></span>
+    <a class="gm-masthead-home" href="/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 637.05 104.79" role="img" aria-label="Ghost Meridian" class="gm-logo" focusable="false"><g class="gm-logo-ink"><path d="M156.72,75.53c-3.73,0-6.94-.62-9.63-1.85-2.69-1.24-4.77-3.04-6.24-5.42-1.47-2.37-2.29-5.27-2.44-8.68-.04-1.69-.06-3.48-.06-5.39s.02-3.72.06-5.45c.16-3.33.98-6.16,2.47-8.48,1.49-2.32,3.59-4.08,6.3-5.3,2.71-1.22,5.89-1.83,9.54-1.83,2.94,0,5.55.36,7.83,1.09,2.28.73,4.19,1.7,5.74,2.91,1.55,1.22,2.74,2.55,3.56,4s1.26,2.88,1.3,4.3c0,.35-.13.65-.38.88-.26.24-.56.35-.91.35h-8.6c-.43,0-.76-.07-.97-.21-.22-.14-.4-.34-.56-.62-.27-.59-.68-1.21-1.21-1.85s-1.26-1.21-2.18-1.68c-.92-.47-2.13-.71-3.62-.71-2.2,0-3.94.59-5.24,1.77-1.3,1.18-2,3.06-2.12,5.65-.12,3.38-.12,6.79,0,10.25.12,2.75.84,4.73,2.18,5.95,1.33,1.22,3.12,1.83,5.36,1.83,1.45,0,2.76-.25,3.92-.77,1.16-.51,2.07-1.3,2.74-2.38.67-1.08,1-2.46,1-4.15v-1.12h.14c-.43,0-.79-.15-1.06-.44-.28-.29-.41-.66-.41-1.09v-4.36c0-.43.14-.79.41-1.09.27-.29.63-.44,1.06-.44h9.16c.43,0,.78.15,1.06.44.27.29.41.66.41,1.09v6.71c0,3.38-.77,6.26-2.3,8.65-1.53,2.4-3.7,4.23-6.51,5.51-2.81,1.28-6.07,1.91-9.8,1.91Z"/><path d="M183.57,74.94c-.43,0-.79-.14-1.06-.41-.27-.27-.41-.63-.41-1.06v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h7.6c.43,0,.79.14,1.09.41.29.28.44.63.44,1.06v14.19h14.48v-14.19c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h7.6c.43,0,.78.14,1.06.41.27.28.41.63.41,1.06v38.27c0,.39-.14.74-.41,1.03-.28.29-.63.44-1.06.44h-7.6c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-14.66h-14.48v14.66c0,.39-.15.74-.44,1.03-.29.29-.66.44-1.09.44h-7.6Z"/><path d="M242.29,75.53c-3.61,0-6.75-.59-9.42-1.77-2.67-1.18-4.75-2.95-6.24-5.33-1.49-2.37-2.32-5.35-2.47-8.92-.04-1.69-.06-3.39-.06-5.09s.02-3.41.06-5.09c.16-3.53.99-6.51,2.5-8.92,1.51-2.41,3.61-4.23,6.3-5.45,2.69-1.22,5.8-1.83,9.33-1.83s6.69.61,9.36,1.83c2.67,1.22,4.77,3.03,6.3,5.45s2.35,5.39,2.47,8.92c.08,1.69.12,3.39.12,5.09s-.04,3.41-.12,5.09c-.12,3.57-.93,6.55-2.44,8.92-1.51,2.38-3.6,4.15-6.27,5.33-2.67,1.18-5.81,1.77-9.42,1.77ZM242.29,67.05c2.08,0,3.78-.63,5.09-1.88,1.31-1.26,2.01-3.26,2.09-6.01.08-1.73.12-3.36.12-4.89s-.04-3.12-.12-4.77c-.08-1.84-.42-3.35-1.03-4.5-.61-1.16-1.44-2.01-2.5-2.56-1.06-.55-2.28-.82-3.65-.82s-2.53.28-3.59.82c-1.06.55-1.9,1.4-2.53,2.56-.63,1.16-.98,2.66-1.06,4.5-.04,1.65-.06,3.24-.06,4.77s.02,3.16.06,4.89c.12,2.75.83,4.75,2.15,6.01,1.31,1.26,2.99,1.88,5.03,1.88Z"/><path d="M283.74,75.53c-3.93,0-7.18-.56-9.77-1.68-2.59-1.12-4.55-2.58-5.89-4.39-1.33-1.8-2.04-3.73-2.12-5.77,0-.31.13-.6.38-.85s.56-.38.91-.38h7.42c.55,0,.97.1,1.27.29s.56.45.79.77c.31.59.76,1.16,1.32,1.71.57.55,1.32.99,2.27,1.33.94.33,2.08.5,3.42.5,2.28,0,3.99-.35,5.15-1.06,1.16-.71,1.74-1.67,1.74-2.88,0-.9-.31-1.63-.94-2.18-.63-.55-1.64-1.05-3.03-1.5-1.39-.45-3.25-.91-5.56-1.38-2.98-.63-5.53-1.44-7.62-2.44-2.1-1-3.7-2.32-4.8-3.94-1.1-1.63-1.65-3.66-1.65-6.09s.68-4.53,2.03-6.42c1.35-1.88,3.25-3.36,5.68-4.42,2.43-1.06,5.32-1.59,8.66-1.59,2.71,0,5.09.35,7.15,1.06,2.06.71,3.8,1.65,5.21,2.83,1.41,1.18,2.48,2.42,3.21,3.74.73,1.32,1.11,2.6,1.15,3.86,0,.31-.11.6-.32.85-.22.26-.52.38-.91.38h-7.77c-.43,0-.81-.08-1.12-.24-.31-.16-.59-.41-.82-.77-.24-.86-.85-1.62-1.85-2.27s-2.31-.97-3.92-.97c-1.73,0-3.07.3-4.03.91-.96.61-1.44,1.54-1.44,2.8,0,.79.27,1.47.79,2.06s1.41,1.1,2.65,1.53c1.24.43,2.93.88,5.09,1.35,3.57.67,6.46,1.5,8.66,2.5,2.2,1,3.82,2.3,4.86,3.89,1.04,1.59,1.56,3.58,1.56,5.98,0,2.67-.77,4.97-2.3,6.89-1.53,1.92-3.62,3.41-6.27,4.45-2.65,1.04-5.72,1.56-9.21,1.56Z"/><path d="M318.54,74.94c-.43,0-.79-.15-1.06-.44-.28-.29-.41-.64-.41-1.03v-30.5h-10.48c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-6.3c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h31.68c.43,0,.78.14,1.06.41.27.28.41.63.41,1.06v6.3c0,.39-.14.74-.41,1.03-.27.29-.63.44-1.06.44h-10.48v30.5c0,.39-.14.74-.41,1.03-.28.29-.63.44-1.06.44h-7.77Z"/><path d="M355.75,74.94c-.39,0-.74-.15-1.03-.44-.29-.29-.44-.64-.44-1.03v-38.27c0-.43.15-.78.44-1.06.29-.27.64-.41,1.03-.41h6.36c.67,0,1.16.17,1.47.5.31.33.51.6.59.79l10.36,18.55,10.36-18.55c.12-.2.32-.46.62-.79.29-.33.77-.5,1.44-.5h6.3c.43,0,.79.14,1.09.41.29.28.44.63.44,1.06v38.27c0,.39-.15.74-.44,1.03-.29.29-.66.44-1.09.44h-7.01c-.43,0-.79-.15-1.09-.44-.29-.29-.44-.64-.44-1.03v-22.08l-6.59,12.31c-.2.35-.45.67-.77.94-.31.28-.75.41-1.3.41h-3.06c-.55,0-.98-.14-1.29-.41-.31-.27-.57-.59-.77-.94l-6.65-12.31v22.08c0,.39-.14.74-.41,1.03-.27.29-.63.44-1.06.44h-7.07Z"/><path d="M403.39,74.94c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h27.5c.43,0,.78.14,1.06.41.27.28.41.63.41,1.06v5.54c0,.43-.14.79-.41,1.06-.27.28-.63.41-1.06.41h-18.78v7.95h17.49c.43,0,.78.15,1.06.44.27.29.41.66.41,1.09v5.12c0,.39-.14.74-.41,1.03-.28.29-.63.44-1.06.44h-17.49v8.18h19.25c.43,0,.78.14,1.06.41.27.28.41.63.41,1.06v5.53c0,.39-.14.74-.41,1.03-.27.29-.63.44-1.06.44h-27.97Z"/><path d="M441.02,74.94c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h16.02c5.1,0,9.11,1.17,12.01,3.5,2.9,2.34,4.36,5.64,4.36,9.92,0,2.79-.67,5.14-2,7.07-1.33,1.92-3.1,3.38-5.3,4.36l9.07,14.48c.12.24.18.45.18.65,0,.31-.13.6-.38.85s-.54.38-.85.38h-7.83c-.75,0-1.3-.19-1.65-.56-.35-.37-.61-.71-.77-1.03l-7.71-12.95h-6.01v13.07c0,.39-.15.74-.44,1.03-.29.29-.66.44-1.09.44h-7.6ZM450.14,52.03h6.77c1.84,0,3.23-.45,4.15-1.35.92-.9,1.38-2.12,1.38-3.65s-.44-2.77-1.32-3.71c-.88-.94-2.29-1.41-4.21-1.41h-6.77v10.13Z"/><path d="M481.7,74.94c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h7.89c.43,0,.79.14,1.09.41.29.28.44.63.44,1.06v38.27c0,.39-.15.74-.44,1.03-.29.29-.66.44-1.09.44h-7.89Z"/><path d="M500.01,74.94c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h15.31c3.85,0,7.12.62,9.83,1.85,2.71,1.24,4.79,3.04,6.24,5.42,1.45,2.38,2.24,5.31,2.36,8.8.04,1.73.06,3.24.06,4.53s-.02,2.79-.06,4.47c-.16,3.65-.93,6.67-2.33,9.07-1.39,2.39-3.42,4.17-6.06,5.33-2.65,1.16-5.9,1.74-9.74,1.74h-15.6ZM509.13,66.46h6.18c1.69,0,3.09-.26,4.21-.79,1.12-.53,1.96-1.36,2.53-2.5.57-1.14.87-2.63.91-4.47.08-1.14.13-2.16.15-3.06.02-.9.02-1.81,0-2.71-.02-.9-.07-1.9-.15-3-.08-2.67-.78-4.62-2.09-5.86-1.32-1.24-3.27-1.85-5.86-1.85h-5.89v24.26Z"/><path d="M542.33,74.94c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h7.89c.43,0,.79.14,1.09.41.29.28.44.63.44,1.06v38.27c0,.39-.15.74-.44,1.03-.29.29-.66.44-1.09.44h-7.89Z"/><path d="M557.58,74.94c-.31,0-.6-.13-.85-.38-.26-.25-.38-.54-.38-.85,0-.2.02-.37.06-.53l13.84-37.8c.12-.43.36-.81.74-1.15.37-.33.89-.5,1.56-.5h8.71c.67,0,1.19.17,1.56.5.37.33.62.72.74,1.15l13.78,37.8c.08.16.12.33.12.53,0,.31-.13.6-.38.85s-.56.38-.91.38h-7.24c-.59,0-1.03-.15-1.32-.44-.29-.29-.48-.56-.56-.79l-2.3-6.01h-15.72l-2.24,6.01c-.08.24-.26.5-.53.79-.27.29-.75.44-1.41.44h-7.24ZM571.42,59.22h10.95l-5.48-15.54-5.48,15.54Z"/><path d="M603.57,74.94c-.43,0-.79-.15-1.06-.44-.27-.29-.41-.64-.41-1.03v-38.27c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h6.24c.67,0,1.15.15,1.44.44.29.29.48.52.56.68l14.37,22.61v-22.26c0-.43.14-.78.41-1.06.27-.27.63-.41,1.06-.41h7.07c.43,0,.78.14,1.06.41.27.28.41.63.41,1.06v38.21c0,.43-.14.79-.41,1.09-.28.29-.63.44-1.06.44h-6.3c-.63,0-1.09-.16-1.38-.47-.29-.31-.48-.53-.56-.65l-14.37-21.79v21.43c0,.39-.14.74-.41,1.03-.27.29-.63.44-1.06.44h-7.07Z"/><rect x="4.25" y="80.29" width="632.81" height="5.02" rx="2.51" ry="2.51"/><rect x="28.92" y="90.71" width="67.85" height="4.32" rx="2.16" ry="2.16"/><rect x="49.74" y="100.48" width="26.22" height="4.32" rx="2.16" ry="2.16"/><path d="M17.34,46.74C17.34,22.96,36.62,3.68,60.41,3.68s43.06,19.28,43.06,43.06c0,12.46,3.05,22.7,5.54,27.68H11.81c2.49-4.98,5.54-15.23,5.54-27.68ZM43.49,33.28v8.46c0,2.12,1.72,3.84,3.84,3.84s3.84-1.72,3.84-3.84v-8.46c0-2.12-1.72-3.84-3.84-3.84s-3.84,1.72-3.84,3.84ZM69.63,33.28v8.46c0,2.12,1.72,3.84,3.84,3.84s3.84-1.72,3.84-3.84v-8.46c0-2.12-1.72-3.84-3.84-3.84s-3.84,1.72-3.84,3.84Z" fill-rule="evenodd"/><path d="M111.86,45.16l-16.61,4.45c-4.78,1.28-6.39,7.26-2.88,10.77l12.16,12.16c3.5,3.5,9.48,1.9,10.77-2.88l4.45-16.61c1.28-4.78-3.1-9.16-7.88-7.88Z"/><path d="M.23,53.04l4.45,16.61c1.28,4.78,7.26,6.39,10.77,2.88l12.16-12.16c3.5-3.5,1.9-9.48-2.88-10.77l-16.61-4.45c-4.78-1.28-9.16,3.1-7.88,7.88Z"/><circle cx="164.49" cy="57.31" r="6.1"/></g><g class="gm-logo-accent"><path d="M127.97,0h0c.81,8.7,7.69,15.58,16.39,16.39h0s0,0,0,0c-8.7.81-15.58,7.69-16.39,16.39h0s0,0,0,0c-.81-8.7-7.69-15.58-16.39-16.39h0s0,0,0,0C120.27,15.58,127.16,8.7,127.97,0h0Z"/><path d="M238.47,50.1c0-2.12,1.72-3.84,3.84-3.84s3.84,1.72,3.84,3.84v8.46c0,2.12-1.72,3.84-3.84,3.84s-3.84-1.72-3.84-3.84v-8.46Z"/><path d="M43.49,33.28c0-2.12,1.72-3.84,3.84-3.84s3.84,1.72,3.84,3.84v8.46c0,2.12-1.72,3.84-3.84,3.84s-3.84-1.72-3.84-3.84v-8.46Z"/><path d="M69.63,33.28c0-2.12,1.72-3.84,3.84-3.84s3.84,1.72,3.84,3.84v8.46c0,2.12-1.72,3.84-3.84,3.84s-3.84-1.72-3.84-3.84v-8.46Z"/></g></svg></a>
+    <nav class="gm-masthead-nav site-nav" aria-label="Sections">
+      <a href="#games">Games</a>
+      <a href="#tools">Tools</a>
+      <a href="#about">About</a>
     </nav>
-    <div class="sky"></div>
-    <div class="anchor" aria-hidden="true"></div>
+  </div>
+</header>
 
-    <div class="content">
-      <h1 class="wordmark"><span>Ghost</span><span>Meridian</span></h1>
-
-      <p class="intro">An independent games studio. Our first game is in development, and the full site is on its way.</p>
-
-      <div class="actions">
-        <a class="email" href="mailto:hello@ghostmeridian.games">hello@ghostmeridian.games</a>
-
-        <!-- Add each profile as a list item. The list hides itself while empty.
-             Example: <li><a href="https://bsky.app/profile/ghostmeridian.games">Bluesky</a></li> -->
-        <ul class="socials" aria-label="Ghost Meridian elsewhere">
-          <li><a href="https://steamcommunity.com/groups/GhostMeridianGames" rel="me">Steam</a></li>
-          <li><a href="https://ghostmeridian.itch.io" rel="me">itch.io</a></li>
-          <li><a href="https://bsky.app/profile/ghostmeridiangames.bsky.social" rel="me">Bluesky</a></li>
-          <li><a href="https://www.instagram.com/ghostmeridiangames/" rel="me">Instagram</a></li>
-          <li><a href="https://www.tiktok.com/@ghostmeridiangames" rel="me">TikTok</a></li>
-          <li><a href="https://x.com/Ghost_Meridian" rel="me">X</a></li>
-          <li><a href="https://www.youtube.com/@GhostMeridianGames" rel="me">YouTube</a></li>
-          <li><a href="https://www.facebook.com/ghostmeridiangames/" rel="me">Facebook</a></li>
-        </ul>
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <canvas class="hero-sky" id="sky" aria-hidden="true"></canvas>
+    <div class="hero-copy wrap">
+      <h1 class="hero-title" id="hero-title">The Games You Wish Someone Made</h1>
+      <p class="hero-lead">Ghost Meridian is an independent game studio making original 2D and 2.5D games. Our first game is in development.</p>
+      <div class="hero-actions">
+        <a class="gm-button gm-button-primary" href="https://steamcommunity.com/groups/GhostMeridianGames" rel="me"><span class="gm-button-shadow" aria-hidden="true"></span><span class="gm-button-face" aria-hidden="true"></span><span class="gm-button-edge" aria-hidden="true"></span><span class="gm-button-label"><span>Join our Steam group</span><span class="gm-button-after"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gm-icon" focusable="false" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-8.5 8.5"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>
+        <a class="gm-button gm-button-secondary" href="mailto:hello@ghostmeridian.games"><span class="gm-button-shadow" aria-hidden="true"></span><span class="gm-button-face" aria-hidden="true"></span><span class="gm-button-edge" aria-hidden="true"></span><span class="gm-button-label"><span>Email the studio</span><span class="gm-button-after"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gm-icon" focusable="false" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span></span></a>
       </div>
-
-      <footer>© 2026 Ghost Meridian</footer>
     </div>
-  </main>
+    <div class="hero-horizon">
+      <div class="gm-meridian" role="separator" id="meridian">
+        <span class="gm-meridian-line"></span>
+        <span class="gm-meridian-marker" style="left:70%"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13" width="52" height="52" shape-rendering="crispEdges" class="gm-diamond" aria-hidden="true"><rect class="r" x="6" y="0" width="1" height="1"/><rect class="r" x="5" y="1" width="1" height="1"/><rect class="p" x="6" y="1" width="1" height="1"/><rect class="r" x="7" y="1" width="1" height="1"/><rect class="r" x="4" y="2" width="1" height="1"/><rect class="p" x="5" y="2" width="3" height="1"/><rect class="r" x="8" y="2" width="1" height="1"/><rect class="r" x="3" y="3" width="1" height="1"/><rect class="p" x="4" y="3" width="5" height="1"/><rect class="r" x="9" y="3" width="1" height="1"/><rect class="r" x="2" y="4" width="1" height="1"/><rect class="p" x="3" y="4" width="7" height="1"/><rect class="r" x="10" y="4" width="1" height="1"/><rect class="r" x="1" y="5" width="1" height="1"/><rect class="p" x="2" y="5" width="4" height="1"/><rect class="c" x="6" y="5" width="1" height="1"/><rect class="p" x="7" y="5" width="4" height="1"/><rect class="r" x="11" y="5" width="1" height="1"/><rect class="r" x="0" y="6" width="1" height="1"/><rect class="p" x="1" y="6" width="4" height="1"/><rect class="c" x="5" y="6" width="3" height="1"/><rect class="p" x="8" y="6" width="4" height="1"/><rect class="r" x="12" y="6" width="1" height="1"/><rect class="r" x="1" y="7" width="1" height="1"/><rect class="p" x="2" y="7" width="4" height="1"/><rect class="c" x="6" y="7" width="1" height="1"/><rect class="p" x="7" y="7" width="4" height="1"/><rect class="r" x="11" y="7" width="1" height="1"/><rect class="r" x="2" y="8" width="1" height="1"/><rect class="p" x="3" y="8" width="7" height="1"/><rect class="r" x="10" y="8" width="1" height="1"/><rect class="r" x="3" y="9" width="1" height="1"/><rect class="p" x="4" y="9" width="5" height="1"/><rect class="r" x="9" y="9" width="1" height="1"/><rect class="r" x="4" y="10" width="1" height="1"/><rect class="p" x="5" y="10" width="3" height="1"/><rect class="r" x="8" y="10" width="1" height="1"/><rect class="r" x="5" y="11" width="1" height="1"/><rect class="p" x="6" y="11" width="1" height="1"/><rect class="r" x="7" y="11" width="1" height="1"/><rect class="r" x="6" y="12" width="1" height="1"/></svg></span>
+        <span class="gm-meridian-reflections" style="left:70%"><span></span><span></span></span>
+      </div>
+    </div>
+    <canvas class="hero-fx" id="fx" aria-hidden="true"></canvas>
+  </section>
 
-<script>
-(() => {
-  // Hide the socials list until it has links in it
-  const socials = document.querySelector('.socials');
-  if (socials && !socials.querySelector('li')) socials.hidden = true;
+  <section class="section" id="games" aria-labelledby="games-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title" id="games-title">Our Secret First Game</h2>
+        <p class="section-lead">One game, for now. We'll show more of it once there's something worth showing.</p>
+      </div>
+      <article class="gm-card">
+        <div class="gm-card-frame">
+          <div class="gm-card-inner">
+            <div class="gm-card-body">
+              <div class="gm-card-top">
+                <span class="gm-eyebrow">Game</span>
+                <span class="gm-tag gm-tag-lilac gm-tag-in-development gm-tag-live"><svg class="gm-tag-marker" viewBox="0 0 5 5" aria-hidden="true"><rect x="2" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect class="r3" x="2" y="3" width="1" height="1"/><rect class="r2" x="1" y="2" width="1" height="1"/><rect class="r2" x="2" y="2" width="1" height="1"/><rect class="r2" x="3" y="2" width="1" height="1"/><rect class="r1" x="2" y="1" width="1" height="1"/></svg><span>In development</span></span>
+              </div>
+              <h3 class="gm-card-title">It's Pretty Good Already</h3>
+              <div class="gm-card-text"><p>We've all been waiting for this one for a long, long time… We're playing it, breaking it, and making it as good as can be.</p></div>
+              <a class="gm-card-cta gm-link" href="https://steamcommunity.com/groups/GhostMeridianGames" rel="me">Hear about it first on Steam<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gm-icon" focusable="false" aria-hidden="true"><path d="M4 12h16"/><path d="m14 6 6 6-6 6"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
 
-  const canvas = document.getElementById('field');
-  if (!canvas || !canvas.getContext) return;
-  const ctx = canvas.getContext('2d');
-  const hero = document.querySelector('.hero');
-  const anchor = document.querySelector('.anchor');
-  const bg = document.createElement('canvas');
-  const bctx = bg.getContext('2d');
-  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let reduce = motionPreference.matches;
-  let animationFrame = null;
+  <section class="section" id="tools" aria-labelledby="tools-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title" id="tools-title">Tools we build</h2>
+        <p class="section-lead">We make our own tools as we go, shaped around how we work. When one is useful beyond the studio, we'll share it.</p>
+      </div>
+      <div class="tools-grid">
+        <article class="gm-card gm-card-side gm-card-has-media">
+          <div class="gm-card-frame">
+            <div class="gm-card-inner">
+              <figure class="gm-card-media gm-card-media-line" style="aspect-ratio:1 / 1">
+                <img src="assets/img/pixel-blitz-ui.webp" alt="Pixel Blitz's Portrait tab, with a lit pixel-art face built from Library parts." loading="lazy" width="796" height="796" style="object-position:center top">
+              </figure>
+              <div class="gm-card-body">
+                <div class="gm-card-top">
+                  <span class="gm-eyebrow">Tool</span>
+                  <span class="gm-tag gm-tag-lilac gm-tag-in-development gm-tag-still"><svg class="gm-tag-marker" viewBox="0 0 5 5" aria-hidden="true"><rect x="2" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect class="r3" x="2" y="3" width="1" height="1"/><rect class="r2" x="1" y="2" width="1" height="1"/><rect class="r2" x="2" y="2" width="1" height="1"/><rect class="r2" x="3" y="2" width="1" height="1"/><rect class="r1" x="2" y="1" width="1" height="1"/></svg><span>In development</span></span>
+                </div>
+                <h3 class="gm-card-title">Pixel Blitz</h3>
+                <div class="gm-card-text"><p>Our sprite and portrait tool. Convert an image to pixel art, then draw, rig and animate it, and build characters from a shared library of parts.</p></div>
+                <a class="gm-card-cta gm-link" href="/pixelblitz/">See Pixel Blitz<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gm-icon" focusable="false" aria-hidden="true"><path d="M4 12h16"/><path d="m14 6 6 6-6 6"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="gm-card">
+          <div class="gm-card-frame">
+            <div class="gm-card-inner">
+              <div class="gm-card-body">
+                <div class="gm-card-top">
+                  <span class="gm-eyebrow">Tool</span>
+                  <span class="gm-tag gm-tag-lilac gm-tag-in-development gm-tag-still"><svg class="gm-tag-marker" viewBox="0 0 5 5" aria-hidden="true"><rect x="2" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect class="r3" x="2" y="3" width="1" height="1"/><rect class="r2" x="1" y="2" width="1" height="1"/><rect class="r2" x="2" y="2" width="1" height="1"/><rect class="r2" x="3" y="2" width="1" height="1"/><rect class="r1" x="2" y="1" width="1" height="1"/></svg><span>In development</span></span>
+                </div>
+                <h3 class="gm-card-title">Pixel Scape</h3>
+                <div class="gm-card-text"><p>A companion to Pixel Blitz for places rather than people: scenes, props and a library of pieces sized to sit alongside our characters.</p></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-  const PAL = {
-    void:   [40, 32, 79],
-    deep:   [27, 21, 56],
-    violet: [104, 69, 213],
-    plasma: [36, 143, 208],
-    solar:  [255, 189, 84],
-    pearl:  [231, 229, 245]
-  };
-  const css = c => `rgb(${c[0]},${c[1]},${c[2]})`;
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="wrap about">
+      <div class="about-text">
+        <h2 class="section-title" id="about-title">About the studio</h2>
+        <p class="about-lead">Ghost Meridian makes games for players still waiting for someone to bring their kind of game back, or take it somewhere new.</p>
+        <p>Founded by James Cunliffe, the studio draws on his experience in both game production and marketing. James previously worked as an animation technician at Cubic Motion, now part of Epic Games, and his credits include <i>XCOM 2</i>, <i>Wolfenstein II</i> and <i>Rainbow Six Siege</i>.</p>
+        <p>His marketing work has included projects for Konami, Ubisoft, Wizards of the Coast, Cloud Imperium, Unknown Worlds, Digital Sun, Activision, Tencent, and AMD.</p>
+      </div>
+      <figure class="about-art" aria-hidden="true">
+        <img src="assets/img/pixel-ghost.svg" alt="" width="128" height="128">
+      </figure>
+    </div>
+  </section>
+</main>
 
-  // 4x4 ordered dither
-  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + 0.5) / 16);
-  const dith = (x, y) => BAYER[(y & 3) * 4 + (x & 3)];
+<footer class="site-foot" aria-labelledby="follow-title">
+  <div class="wrap">
+    <div class="follow">
+      <div>
+        <h2 class="follow-title" id="follow-title">Follow along</h2>
+        <p class="follow-text">Pick wherever you already are. For anything else, write to <a class="gm-link" href="mailto:hello@ghostmeridian.games">hello@ghostmeridian.games</a>.</p>
+      </div>
+      <ul class="gm-socials gm-socials-named" aria-label="Ghost Meridian elsewhere"><li><a class="gm-link gm-social" href="https://steamcommunity.com/groups/GhostMeridianGames" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg><span>Steam</span></a></li><li><a class="gm-link gm-social" href="https://ghostmeridian.itch.io" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M3.13 1.338C2.08 1.96.02 4.328 0 4.95v1.03c0 1.303 1.22 2.45 2.325 2.45 1.33 0 2.436-1.102 2.436-2.41 0 1.308 1.07 2.41 2.4 2.41 1.328 0 2.362-1.102 2.362-2.41 0 1.308 1.137 2.41 2.466 2.41h.024c1.33 0 2.466-1.102 2.466-2.41 0 1.308 1.034 2.41 2.363 2.41 1.33 0 2.4-1.102 2.4-2.41 0 1.308 1.106 2.41 2.435 2.41C22.78 8.43 24 7.282 24 5.98V4.95c-.02-.62-2.082-2.99-3.13-3.612-3.253-.114-5.508-.134-8.87-.133-3.362 0-7.945.053-8.87.133zm6.376 6.477a2.74 2.74 0 0 1-.468.602c-.5.49-1.19.795-1.947.795a2.786 2.786 0 0 1-1.95-.795c-.182-.178-.32-.37-.446-.59-.127.222-.303.412-.486.59a2.788 2.788 0 0 1-1.95.795c-.092 0-.187-.025-.264-.052-.107 1.113-.152 2.176-.168 2.95v.005l-.006 1.167c.02 2.334-.23 7.564 1.03 8.85 1.952.454 5.545.662 9.15.663 3.605 0 7.198-.21 9.15-.664 1.26-1.284 1.01-6.514 1.03-8.848l-.006-1.167v-.004c-.016-.775-.06-1.838-.168-2.95-.077.026-.172.052-.263.052a2.788 2.788 0 0 1-1.95-.795c-.184-.178-.36-.368-.486-.59-.127.22-.265.412-.447.59a2.786 2.786 0 0 1-1.95.794c-.76 0-1.446-.303-1.948-.793a2.74 2.74 0 0 1-.468-.602 2.738 2.738 0 0 1-.463.602 2.787 2.787 0 0 1-1.95.794h-.16a2.787 2.787 0 0 1-1.95-.793 2.738 2.738 0 0 1-.464-.602zm-2.004 2.59v.002c.795.002 1.5 0 2.373.953.687-.072 1.406-.108 2.125-.107.72 0 1.438.035 2.125.107.873-.953 1.578-.95 2.372-.953.376 0 1.876 0 2.92 2.934l1.123 4.028c.832 2.995-.266 3.068-1.636 3.07-2.03-.075-3.156-1.55-3.156-3.025-1.124.184-2.436.276-3.748.277-1.312 0-2.624-.093-3.748-.277 0 1.475-1.125 2.95-3.156 3.026-1.37-.004-2.468-.077-1.636-3.072l1.122-4.027c1.045-2.934 2.545-2.934 2.92-2.934zM12 12.714c-.002.002-2.14 1.964-2.523 2.662l1.4-.056v1.22c0 .056.56.033 1.123.007.562.026 1.124.05 1.124-.008v-1.22l1.4.055C14.138 14.677 12 12.713 12 12.713z"/></svg><span>itch.io</span></a></li><li><a class="gm-link gm-social" href="https://bsky.app/profile/ghostmeridiangames.bsky.social" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M5.202 2.857C7.954 4.922 10.913 9.11 12 11.358c1.087-2.247 4.046-6.436 6.798-8.501C20.783 1.366 24 .213 24 3.883c0 .732-.42 6.156-.667 7.037-.856 3.061-3.978 3.842-6.755 3.37 4.854.826 6.089 3.562 3.422 6.299-5.065 5.196-7.28-1.304-7.847-2.97-.104-.305-.152-.448-.153-.327 0-.121-.05.022-.153.327-.568 1.666-2.782 8.166-7.847 2.97-2.667-2.737-1.432-5.473 3.422-6.3-2.777.473-5.899-.308-6.755-3.369C.42 10.04 0 4.615 0 3.883c0-3.67 3.217-2.517 5.202-1.026"/></svg><span>Bluesky</span></a></li><li><a class="gm-link gm-social" href="https://www.instagram.com/ghostmeridiangames/" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span>Instagram</span></a></li><li><a class="gm-link gm-social" href="https://www.tiktok.com/@ghostmeridiangames" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg><span>TikTok</span></a></li><li><a class="gm-link gm-social" href="https://x.com/Ghost_Meridian" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg><span>X</span></a></li><li><a class="gm-link gm-social" href="https://www.youtube.com/@GhostMeridianGames" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span>YouTube</span></a></li><li><a class="gm-link gm-social" href="https://www.facebook.com/ghostmeridiangames/" rel="me"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="gm-social-icon" focusable="false" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg><span>Facebook</span></a></li></ul>
+    </div>
+    <div class="foot-base">
+      <span class="foot-ident"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 203.25 169.94" aria-hidden="true" class="gm-logo" focusable="false"><g class="gm-logo-ink"><path d="M28.47,72.8C28.47,32.59,61.07,0,101.27,0s72.8,32.59,72.8,72.8c0,21.06,5.15,38.38,9.36,46.8H19.11c4.21-8.42,9.36-25.74,9.36-46.8ZM72.67,50.05v14.3c0,3.59,2.91,6.5,6.5,6.5s6.5-2.91,6.5-6.5v-14.3c0-3.59-2.91-6.5-6.5-6.5s-6.5,2.91-6.5,6.5ZM116.87,50.05v14.3c0,3.59,2.91,6.5,6.5,6.5s6.5-2.91,6.5-6.5v-14.3c0-3.59-2.91-6.5-6.5-6.5s-6.5,2.91-6.5,6.5Z" fill-rule="evenodd"/><rect x="2.47" y="128.7" width="197.6" height="8.32" rx="4.16" ry="4.16"/><rect x="44.07" y="146.2" width="114.4" height="7.28" rx="3.64" ry="3.64"/><rect x="79.17" y="162.66" width="44.2" height="7.28" rx="3.64" ry="3.64"/><path d="M189.06,70.67l-26.79,7.18c-8.37,2.24-11.18,12.71-5.05,18.84l19.61,19.61c6.13,6.13,16.6,3.33,18.84-5.05l7.18-26.79c2.24-8.37-5.42-16.04-13.79-13.79Z"/><path d="M.4,84.46l7.18,26.79c2.24,8.37,12.71,11.18,18.84,5.05l19.61-19.61c6.13-6.13,3.33-16.6-5.05-18.84l-26.79-7.18c-8.37-2.24-16.04,5.42-13.79,13.79Z"/></g><g class="gm-logo-accent"></g></svg></span>
+      <span>© 2026 Ghost Meridian</span>
+    </div>
+  </div>
+</footer>
 
-  let PX, W, H, lineY, dX, R, spreadUp, motes = [];
-  const start = performance.now();
-  let last = start;
-
-  function layout() {
-    PX = window.innerWidth < 640 ? 3 : 4;
-    W = Math.max(1, Math.ceil(hero.clientWidth / PX));
-    H = Math.max(1, Math.ceil(hero.clientHeight / PX));
-    canvas.width = bg.width = W;
-    canvas.height = bg.height = H;
-    lineY = Math.round(anchor.offsetTop / PX);
-    dX = Math.round(W * (W * PX < 640 ? 0.78 : 0.7));
-    R = PX === 3 ? 6 : 8;
-    spreadUp = Math.max(16, lineY * 0.42);
-    paintBackground();
-    seedMotes();
-  }
-
-  function paintBackground() {
-    const img = bctx.createImageData(W, H);
-    const d = img.data;
-    const spreadP = Math.max(4, lineY * 0.07);
-    const spreadDown = Math.max(3, spreadUp * 0.12);
-    const spreadX = W * 0.36;
-
-    for (let y = 0; y < H; y++) {
-      const above = y <= lineY;
-      const dy = Math.abs(y - lineY);
-      const sky = above ? Math.pow((lineY - y) / Math.max(1, lineY), 1.6) * 0.6 : 0;
-      for (let x = 0; x < W; x++) {
-        const t = BAYER[(y & 3) * 4 + (x & 3)];
-        const pool = 0.4 + 0.6 * Math.exp(-Math.pow((x - dX) / spreadX, 2));
-        const p = Math.exp(-dy / (above ? spreadP : spreadP * 0.5)) * pool * 0.62;
-        const v = Math.exp(-dy / (above ? spreadUp : spreadDown)) * pool * 0.5;
-        let c = PAL.void;
-        if (p > t) c = PAL.plasma;
-        else if (v > t) c = PAL.violet;
-        else if (sky > t) c = PAL.deep;
-        const i = (y * W + x) * 4;
-        d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
-      }
-    }
-    bctx.putImageData(img, 0, 0);
-  }
-
-  function newMote(anywhere) {
-    const r = Math.random();
-    return {
-      x: Math.random() * W,
-      y: anywhere ? lineY - Math.random() * spreadUp * 1.5 : lineY - 2 - Math.random() * 6,
-      vy: 1.2 + Math.random() * 3.5,
-      drift: (Math.random() - 0.5) * 0.6,
-      phase: Math.random() * Math.PI * 2,
-      rate: 0.8 + Math.random() * 1.6,
-      c: r < 0.2 ? PAL.pearl : r < 0.65 ? PAL.violet : PAL.plasma
-    };
-  }
-
-  function seedMotes() {
-    const n = Math.min(90, Math.round((W * lineY) / 500));
-    motes = Array.from({ length: n }, () => newMote(true));
-  }
-
-  function px(x, y, c) {
-    ctx.fillStyle = css(c);
-    ctx.fillRect(x, y, 1, 1);
-  }
-
-  // flash: 0 normal; 1 the moment the line strikes (lit plate, pearl rim);
-  // 2 the after-glow (a larger pearl core)
-  function drawDiamond(t, flash) {
-    for (let dy = -R; dy <= R; dy++) {
-      const w = R - Math.abs(dy);
-      const y = lineY + dy;
-      ctx.fillStyle = css(flash === 1 ? PAL.solar : PAL.void);
-      ctx.fillRect(dX - w, y, w * 2 + 1, 1);
-      ctx.fillStyle = css(flash === 1 ? PAL.pearl : PAL.solar);
-      ctx.fillRect(dX - w, y, 1, 1);
-      ctx.fillRect(dX + w, y, 1, 1);
-    }
-    // Core: a slow two-step pulse
-    const on = reduce || Math.floor(t / 1.2) % 2 === 0;
-    ctx.fillStyle = css(flash ? PAL.pearl : (on ? PAL.pearl : PAL.plasma));
-    const cr = flash === 2 ? 3 : 2;
-    for (let dy = -cr; dy <= cr; dy++) {
-      const w = cr - Math.abs(dy);
-      ctx.fillRect(dX - w, lineY + dy, w * 2 + 1, 1);
-    }
-  }
-
-  // The strike: when the meridian reaches the diamond, a flattened ring of
-  // light spreads out and dithers away, a flare runs along the line (and
-  // briefly up and down), and sparks fly off and fade pixel by pixel.
-  // Sizes follow the diamond's radius, so it scales with PX; the timing is
-  // stepped at 20 frames a second, like the rest of the motion.
-  let strikeT = null, sparks = [];
-
-  function spawnSparks() {
-    const k = R / 8;
-    sparks = Array.from({ length: 34 }, () => {
-      const a = Math.random() * Math.PI * 2;
-      const s = (28 + Math.random() * 62) * k;
-      const r = Math.random();
-      return {
-        x: dX + Math.cos(a) * 3,
-        y: lineY + Math.sin(a) * 3,
-        vx: Math.cos(a) * s * 1.5,
-        vy: Math.sin(a) * s * 0.75 - 6 * k,
-        life: 0.55 + Math.random() * 0.75,
-        age: 0,
-        c: r < 0.3 ? PAL.pearl : r < 0.65 ? PAL.solar : PAL.plasma,
-        tail: Math.random() < 0.45
-      };
-    });
-  }
-
-  function drawStrike(t) {
-    const a = Math.floor((t - strikeT) * 20) / 20;
-    // the ring
-    if (a < 0.75) {
-      const k = a / 0.75;
-      const r = R + 2 + Math.round(k * R * 4.25);
-      const fade = 1 - k;
-      const c = a < 0.18 ? PAL.pearl : a < 0.4 ? PAL.solar : a < 0.58 ? PAL.plasma : PAL.violet;
-      for (let i = 0; i <= r; i++) {
-        const ox = i;
-        const oy = Math.round((r - i) * 0.6);
-        for (const [x, y] of [[dX + ox, lineY - oy], [dX - ox, lineY - oy], [dX + ox, lineY + oy], [dX - ox, lineY + oy]]) {
-          if (y >= 0 && y < H && dith(x, y) < fade) px(x, y, c);
-        }
-      }
-    }
-    // the flare along the line, and a shorter one up and down
-    if (a < 0.5) {
-      const L = Math.round(Math.sin(Math.PI * a / 0.5) * R * 8.75);
-      const V = Math.round(L * 0.22);
-      for (let d = R + 1; d <= R + L; d++) {
-        const f = 1 - (d - R) / Math.max(1, L);
-        const c = f > 0.6 ? PAL.pearl : PAL.solar;
-        if (dith(dX + d, lineY) < f + 0.15) px(dX + d, lineY, c);
-        if (dith(dX - d, lineY) < f + 0.15) px(dX - d, lineY, c);
-        if (f > 0.5) {
-          if (dith(dX + d, lineY - 1) < f - 0.3) px(dX + d, lineY - 1, PAL.solar);
-          if (dith(dX - d, lineY + 1) < f - 0.3) px(dX - d, lineY + 1, PAL.solar);
-        }
-      }
-      for (let d = R + 1; d <= R + V; d++) {
-        const f = 1 - (d - R) / Math.max(1, V);
-        const c = f > 0.5 ? PAL.pearl : PAL.solar;
-        if (dith(dX, lineY - d) < f + 0.1) px(dX, lineY - d, c);
-        if (dith(dX, lineY + d) < f + 0.1) px(dX, lineY + d, c);
-      }
-    }
-    return a;
-  }
-
-  function drawSparks(dt) {
-    for (const s of sparks) {
-      if (s.age >= s.life) continue;
-      s.age += dt;
-      const drag = Math.pow(0.12, dt);   // they slow quickly
-      s.vx *= drag;
-      s.vy = s.vy * drag - 10 * (R / 8) * dt;   // and drift up a touch, like the motes
-      const ox = s.x, oy = s.y;
-      s.x += s.vx * dt;
-      s.y += s.vy * dt;
-      const left = 1 - s.age / s.life;
-      const x = Math.round(s.x), y = Math.round(s.y);
-      if (dith(x, y) < left + 0.1 && (left > 0.35 || Math.floor(s.age * 20) % 2 === 0)) {
-        px(x, y, left < 0.3 ? PAL.violet : s.c);
-        if (s.tail && left > 0.5) {
-          const tx = Math.round((ox + s.x) / 2 - s.vx * 0.02);
-          const ty = Math.round((oy + s.y) / 2 - s.vy * 0.02);
-          if (tx !== x || ty !== y) px(tx, ty, PAL.plasma);
-        }
-      }
-    }
-  }
-
-  function frame(now) {
-    animationFrame = null;
-    const t = (now - start) / 1000;
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-
-    ctx.drawImage(bg, 0, 0);
-
-    // Motes rising off the meridian
-    for (const m of motes) {
-      if (!reduce) {
-        m.y -= m.vy * dt;
-        m.x += m.drift * dt;
-        if (m.y < lineY - spreadUp * 1.6 || m.y < 0) Object.assign(m, newMote(false));
-      }
-      if (Math.sin(t * m.rate + m.phase) > -0.35) {
-        ctx.fillStyle = css(m.c);
-        ctx.fillRect(Math.round(m.x), Math.round(m.y), 1, 1);
-      }
-    }
-
-    // The meridian draws across in steps
-    const reveal = reduce ? 1 : Math.min(1, t / 1.1);
-    const lx = Math.round(W * Math.floor(reveal * 28) / 28);
-    ctx.fillStyle = css(PAL.plasma);
-    ctx.fillRect(0, lineY - 1, lx, 1);
-    ctx.fillRect(0, lineY + 1, lx, 1);
-    ctx.fillStyle = css(PAL.pearl);
-    ctx.fillRect(0, lineY, lx, 1);
-
-    ctx.fillStyle = css(PAL.violet);
-    for (let x = 6; x < lx; x += 20) ctx.fillRect(x, lineY + 3, 1, 2);
-
-    // The strike, once, as the line reaches the diamond (not with reduced motion)
-    if (lx >= dX && strikeT === null && !reduce) {
-      strikeT = t;
-      spawnSparks();
-    }
-    let flash = 0;
-    if (strikeT !== null && !reduce) {
-      const a = drawStrike(t);
-      flash = a < 0.12 ? 1 : a < 0.45 ? 2 : 0;
-    }
-
-    if (lx >= dX) drawDiamond(t, flash);
-    if (strikeT !== null && !reduce) drawSparks(dt);
-
-    if (!reduce) animationFrame = requestAnimationFrame(frame);
-  }
-
-  let pending = false;
-  function onResize() {
-    if (pending) return;
-    pending = true;
-    requestAnimationFrame(() => {
-      pending = false;
-      layout();
-      if (reduce) frame(performance.now());
-    });
-  }
-
-  motionPreference.addEventListener('change', event => {
-    reduce = event.matches;
-    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
-    if (reduce) sparks = [];
-    last = performance.now();
-    frame(last);
-  });
-
-  layout();
-  if (reduce) frame(performance.now());
-  else animationFrame = requestAnimationFrame(frame);
-
-  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(hero);
-  else window.addEventListener('resize', onResize);
-})();
-</script>
+<script src="assets/js/horizon.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,202 @@
+/* Ghost Meridian components. Every value comes from tokens.css. */
+body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-sans); font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+.gm-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.gm-eyebrow { font-family: var(--font-mono); font-size: 12px; line-height: 1.5; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); }
+
+/* Focus: one ring everywhere, offset so it lands on the surface */
+.gm-button:focus-visible, .gm-link:focus-visible, .gm-tab:focus-visible, .gm-masthead-home:focus-visible, .gm-input:focus-visible {
+  outline: 3px solid var(--focus); outline-offset: 3px;
+}
+
+/* Logo */
+.gm-logo { display: block; width: 100%; height: auto; overflow: visible; }
+.gm-logo .gm-logo-ink { fill: var(--logo); }
+.gm-logo .gm-logo-accent { fill: var(--afterglow); }
+
+/* Meridian: the horizon line with the diamond marker and its reflection */
+.gm-meridian { position: relative; height: 40px; }
+.gm-meridian-line { position: absolute; left: 0; right: 0; top: 50%; height: 4px; margin-top: -2px; border-radius: var(--radius-pill); background: var(--logo); }
+.gm-meridian-marker { position: absolute; top: 50%; transform: translate(-50%, -50%); line-height: 0; }
+.gm-meridian-reflections { position: absolute; top: calc(50% + 6px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.gm-meridian-reflections span { display: block; height: 3px; border-radius: var(--radius-pill); background: var(--logo); }
+.gm-meridian-reflections span:nth-child(1) { width: 64px; margin-top: 14px; }
+.gm-meridian-reflections span:nth-child(2) { width: 24px; }
+.gm-diamond { display: block; image-rendering: pixelated; }
+.gm-diamond .r { fill: var(--afterglow); }
+.gm-diamond .p { fill: var(--surface); }
+.gm-diamond .c { fill: var(--ink); }
+
+/* Masthead */
+.gm-masthead { position: relative; display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); }
+.gm-masthead-line { position: absolute; left: 0; right: 0; top: var(--gm-line-top); height: var(--gm-line-h); background: var(--logo); border-radius: var(--radius-pill); }
+.gm-masthead-home { position: relative; display: block; line-height: 0; border-radius: var(--radius-sm); }
+.gm-masthead-home .gm-logo { width: auto; height: var(--gm-logo-h); }
+.gm-masthead-nav { position: relative; display: flex; gap: var(--space-3); flex-wrap: wrap; justify-content: flex-end; }
+
+/* Buttons: Pixel Step. Two 3px steps at each corner, the card's dithered shadow (4px), a lift on hover
+   and a press onto the shadow. Layers: shadow, face (ground), edge, label. */
+.gm-button { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 20px;
+  border: 0; background: none; color: var(--ink); font: 500 16px/1.25 var(--font-sans); text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.gm-button-primary, .gm-button-secondary { margin: 0 4px 4px 0; }
+.gm-button-small { min-height: 36px; padding: 6px 14px; font-size: 15px; }
+.gm-button-shadow, .gm-button-face, .gm-button-edge { position: absolute; inset: 0; pointer-events: none; clip-path: polygon(0px 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0px, calc(100% - 6px) 0px, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0px calc(100% - 6px)); }
+.gm-button-shadow { z-index: 0; transform: translate(4px, 4px); background: var(--card-shadow); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 8px 8px; mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 8px 8px; }
+.gm-button-face { z-index: 1; background: var(--gm-button-ground, var(--surface)); }
+.gm-button-edge { z-index: 2; }
+.gm-button-label { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: var(--space-2); }
+.gm-button-face, .gm-button-edge, .gm-button-label { transition: transform 100ms steps(2, end), background-color 140ms ease; }
+.gm-button-after { display: inline-flex; transition: transform 90ms steps(1, end); }
+.gm-button:hover .gm-button-after { transform: translateX(3px); }
+.gm-card { --gm-button-ground: var(--surface-raised); }
+
+.gm-button-primary { color: var(--on-accent); }
+.gm-button-primary .gm-button-face { display: none; }
+.gm-button-primary .gm-button-edge { background: var(--accent); }
+.gm-button-primary:hover .gm-button-edge { background: var(--accent-hover); }
+.gm-button-secondary .gm-button-edge { background: var(--control-border); clip-path: polygon(evenodd, 0px 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0px, calc(100% - 6px) 0px, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0px calc(100% - 6px), 0px 6px, 2px 8px, 5px 8px, 5px 5px, 8px 5px, 8px 2px, calc(100% - 8px) 2px, calc(100% - 8px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 8px, calc(100% - 2px) 8px, calc(100% - 2px) calc(100% - 8px), calc(100% - 5px) calc(100% - 8px), calc(100% - 5px) calc(100% - 5px), calc(100% - 8px) calc(100% - 5px), calc(100% - 8px) calc(100% - 2px), 8px calc(100% - 2px), 8px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 8px), 2px calc(100% - 8px), 2px 8px); }
+.gm-button-secondary:hover .gm-button-edge { background: var(--accent); }
+.gm-button-primary:hover > .gm-button-face, .gm-button-primary:hover > .gm-button-edge, .gm-button-primary:hover > .gm-button-label,
+.gm-button-secondary:hover > .gm-button-face, .gm-button-secondary:hover > .gm-button-edge, .gm-button-secondary:hover > .gm-button-label { transform: translate(-2px, -2px); }
+.gm-button-primary:active > .gm-button-face, .gm-button-primary:active > .gm-button-edge, .gm-button-primary:active > .gm-button-label,
+.gm-button-secondary:active > .gm-button-face, .gm-button-secondary:active > .gm-button-edge, .gm-button-secondary:active > .gm-button-label { transform: translate(4px, 4px); }
+
+.gm-button-quiet { padding-left: 10px; padding-right: 10px; }
+.gm-button-quiet .gm-button-shadow, .gm-button-quiet .gm-button-edge { display: none; }
+.gm-button-quiet .gm-button-face { visibility: hidden; background: var(--control-border); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 8px 8px; mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 8px 8px; }
+.gm-button-quiet:hover .gm-button-face { visibility: visible; }
+
+.gm-button[disabled], .gm-button[aria-disabled="true"] { cursor: not-allowed; color: var(--ink-muted); margin: 0 4px 4px 0; }
+.gm-button[disabled] > span, .gm-button[aria-disabled="true"] > span { transform: none !important; }
+.gm-button[disabled] .gm-button-shadow, .gm-button[aria-disabled="true"] .gm-button-shadow { display: none; }
+.gm-button[disabled] .gm-button-face, .gm-button[aria-disabled="true"] .gm-button-face { display: block; visibility: visible; background: var(--gm-button-ground, var(--surface)); -webkit-mask: none; mask: none; }
+.gm-button[disabled] .gm-button-edge, .gm-button[aria-disabled="true"] .gm-button-edge { display: block; background: var(--control-border); clip-path: polygon(evenodd, 0px 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0px, calc(100% - 6px) 0px, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0px calc(100% - 6px), 0px 6px, 2px 8px, 5px 8px, 5px 5px, 8px 5px, 8px 2px, calc(100% - 8px) 2px, calc(100% - 8px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 8px, calc(100% - 2px) 8px, calc(100% - 2px) calc(100% - 8px), calc(100% - 5px) calc(100% - 8px), calc(100% - 5px) calc(100% - 5px), calc(100% - 8px) calc(100% - 5px), calc(100% - 8px) calc(100% - 2px), 8px calc(100% - 2px), 8px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 8px), 2px calc(100% - 8px), 2px 8px); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 8px 8px; mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 8px 8px; }
+@media (prefers-reduced-motion: reduce) { .gm-button > span, .gm-button-after { transition: none; } }
+
+/* Links */
+.gm-link { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--link-underline); padding-bottom: 1px; transition: color 140ms ease, border-color 140ms ease; display: inline-flex; align-items: center; gap: var(--space-1); }
+.gm-link:hover { color: var(--accent-text); border-color: var(--accent-text); }
+.gm-link-icon { flex: none; }
+
+/* Tags: Night Ink text on a palette fill, the same in both themes */
+.gm-tag { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px;
+  font: 500 12px/1.3 var(--font-sans); color: var(--on-accent); white-space: nowrap; --gm-tone: var(--afterglow); }
+.gm-tag::before { content: ""; position: absolute; inset: 0; z-index: -1; clip-path: polygon(0px 2px, 2px 2px, 2px 0px, calc(100% - 2px) 0px, calc(100% - 2px) 2px, 100% 2px, 100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%, 2px 100%, 2px calc(100% - 2px), 0px calc(100% - 2px)); background: var(--gm-tone); }
+.gm-tag-accent { --gm-tone: var(--afterglow); }
+.gm-tag-moss { --gm-tone: var(--mosslight); }
+.gm-tag-lilac { --gm-tone: var(--wild-lilac); }
+.gm-tag-glimmer { --gm-tone: var(--glimmer); }
+.gm-tag-neutral { --gm-tone: var(--control-border); color: var(--ink); }
+.gm-tag-neutral::before { clip-path: polygon(evenodd, 0px 2px, 2px 2px, 2px 0px, calc(100% - 2px) 0px, calc(100% - 2px) 2px, 100% 2px, 100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%, 2px 100%, 2px calc(100% - 2px), 0px calc(100% - 2px), 0px 2px, 1px 3px, 3px 3px, 3px 1px, calc(100% - 3px) 1px, calc(100% - 3px) 3px, calc(100% - 1px) 3px, calc(100% - 1px) calc(100% - 3px), calc(100% - 3px) calc(100% - 3px), calc(100% - 3px) calc(100% - 1px), 3px calc(100% - 1px), 3px calc(100% - 3px), 1px calc(100% - 3px), 1px 3px); }
+/* Waypoint markers: 5 x 5 pixels at 2px, in the text colour */
+.gm-tag-marker { flex: none; width: 10px; height: 10px; shape-rendering: crispEdges; fill: currentColor; }
+.gm-tag-marker .spark { opacity: 0; }
+.gm-tag-still .gm-tag-marker .r1 { opacity: 0; }
+/* Motion: In development fills in a loop, Coming soon blinks slowly, a glint on hover, a crit on Released */
+.gm-tag-live .gm-tag-marker .r3 { animation: gm-tag-r3 2.4s steps(1, end) infinite; }
+.gm-tag-live .gm-tag-marker .r2 { animation: gm-tag-r2 2.4s steps(1, end) infinite; }
+.gm-tag-live .gm-tag-marker .r1 { animation: gm-tag-r1 2.4s steps(1, end) infinite; }
+@keyframes gm-tag-r3 { 0% { opacity: 0 } 25% { opacity: 1 } }
+@keyframes gm-tag-r2 { 0% { opacity: 0 } 50% { opacity: 1 } }
+@keyframes gm-tag-r1 { 0% { opacity: 0 } 75% { opacity: 1 } }
+.gm-tag-live .gm-tag-marker .core { animation: gm-tag-blink 1.6s steps(1, end) infinite; }
+@keyframes gm-tag-blink { 0% { opacity: 1 } 50% { opacity: 0 } }
+.gm-tag-live::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 6px; z-index: -1; background: var(--warm-paper); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 4px 4px; mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 4px 4px; opacity: 0; pointer-events: none; }
+.gm-tag-live:not(.gm-tag-neutral):hover::after { animation: gm-tag-glint 360ms steps(6, end) 1; }
+@keyframes gm-tag-glint { 0% { opacity: .8; transform: translateX(-6px); } 100% { opacity: .8; transform: translateX(140px); } }
+.gm-tag-live.gm-tag-released:hover .spark { animation: gm-tag-crit 480ms steps(1, end) 1; }
+@keyframes gm-tag-crit { 0% { opacity: 1 } 50% { opacity: 0 } 75% { opacity: 1 } 100% { opacity: 0 } }
+@media (prefers-reduced-motion: reduce) { .gm-tag-live .gm-tag-marker *, .gm-tag-live::after { animation: none !important; } .gm-tag-live .gm-tag-marker .r1 { opacity: 0; } }
+
+/* Tab plate: the website's Pixel Blitz tab */
+.gm-tab { display: inline-flex; align-items: center; gap: var(--space-3); padding: 9px 10px 9px 16px; border: 1px solid var(--line); border-radius: var(--radius-lg);
+  background: var(--surface-raised); color: var(--ink); text-decoration: none; font: 500 15px/1.3 var(--font-sans); white-space: nowrap; transition: border-color 140ms ease; }
+.gm-tab:hover { border-color: var(--accent); }
+.gm-tab-active { border-color: var(--ink); }
+
+/* Social links */
+.gm-socials { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin: 0; padding: 0; list-style: none; }
+.gm-socials-icons { gap: var(--space-1) var(--space-2); }
+.gm-social { gap: var(--space-2); }
+.gm-social-icon { display: block; flex: none; }
+.gm-social-only { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--radius-sm); color: var(--ink); transition: color 140ms ease; }
+.gm-social-only:hover { color: var(--accent-text); }
+.gm-social-only:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; }
+
+/* Card: Pixel Step, sky texture, quiet edge (chosen 21 October 2026). Generated by make_card_css. */
+.gm-card, .gm-card *, .gm-card *::before, .gm-card *::after { box-sizing: border-box; }
+.gm-card { position: relative; isolation: isolate; display: flex; margin: 0 9px 9px 0; container-type: inline-size; }
+.gm-card::before { content: ""; position: absolute; inset: 0; transform: translate(9px, 9px); z-index: -1; clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
+  background: var(--card-shadow); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 12px 12px; mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat 0 0 / 12px 12px; }
+.gm-card-frame { flex: 1; display: flex; padding: 2px; background: var(--line); clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px)); }
+.gm-card-inner { position: relative; flex: 1; display: flex; flex-direction: column; background: var(--surface-raised); color: var(--ink); clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px)); overflow: hidden; }
+.gm-card-body { position: relative; isolation: isolate; flex: 1; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-6); }
+.gm-card-body::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 126px; z-index: -1; pointer-events: none; background: var(--surface-texture);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%2242%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%225%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%225%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%227%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2211%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2213%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2215%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2216%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2216%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2217%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2218%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2218%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2220%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2222%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2226%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2230%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2232%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2236%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat-x left top / 12px 126px; mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%2242%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%225%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%225%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%227%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2211%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2213%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2215%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2216%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2216%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2217%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2218%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2218%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2220%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2222%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2226%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2230%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2232%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2236%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat-x left top / 12px 126px; }
+.gm-card-top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.gm-card-title { margin: 0; font: 500 22px/1.3 var(--font-sans); }
+.gm-card-text { color: var(--ink-muted); }
+.gm-card-text p { margin: 0; }
+.gm-card-cta { align-self: flex-start; margin-top: var(--space-1); }
+
+/* Images */
+.gm-card-media { position: relative; margin: 0; overflow: hidden; background: var(--night-ink); flex: none; }
+.gm-card-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.gm-pixelated { image-rendering: pixelated; image-rendering: crisp-edges; }
+.gm-card-media-line { border: 0 solid var(--afterglow); border-bottom-width: 4px; }
+.gm-line-lilac { border-color: var(--wild-lilac); }
+.gm-line-glimmer { border-color: var(--glimmer); }
+.gm-line-white { border-color: var(--logo); }
+.gm-card-media-label { position: absolute; left: var(--space-3); bottom: var(--space-3); padding: 3px 8px; background: var(--night-ink); color: var(--warm-paper);
+  font: 500 11px/1.4 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+.gm-card-media-line .gm-card-media-label { bottom: calc(var(--space-3) - 2px); }
+
+/* Tile: square image, title and status only */
+.gm-card-tile .gm-card-body { padding: var(--space-4) var(--space-4) var(--space-4); gap: var(--space-2); }
+.gm-card-tile .gm-card-title { font-size: 18px; }
+
+/* Side: square image beside the text; stacks when the card is narrow */
+.gm-card-side .gm-card-inner { flex-direction: row; }
+.gm-card-side .gm-card-media { width: 38%; max-width: 280px; align-self: stretch; aspect-ratio: auto !important; min-height: 100%; }
+.gm-card-side .gm-card-media-line { border-bottom-width: 0; border-right-width: 4px; }
+@container (max-width: 520px) {
+  .gm-card-side .gm-card-inner { flex-direction: column; }
+  .gm-card-side .gm-card-media { width: 100%; max-width: none; min-height: 0; aspect-ratio: 1 / 1 !important; }
+  .gm-card-side .gm-card-media-line { border-right-width: 0; border-bottom-width: 4px; }
+}
+
+/* Banner: a widescreen image with the text on a Night Ink panel at the left that dithers out to the right.
+   Text is Warm Paper in both themes. Under 600px the panel moves to the bottom. */
+.gm-card-banner .gm-card-inner { display: grid; aspect-ratio: 21 / 9; }
+.gm-card-banner .gm-card-media { grid-area: 1 / 1; aspect-ratio: auto !important; height: 100%; min-height: 0; }
+.gm-card-banner .gm-card-media img { position: absolute; inset: 0; }
+.gm-card-banner .gm-card-body { grid-area: 1 / 1; justify-self: start; align-self: stretch; justify-content: flex-end; width: min(46%, 520px);
+  padding: var(--space-8) 72px var(--space-8) var(--space-8); color: var(--warm-paper); }
+.gm-card-banner .gm-card-body::before { inset: 0; height: auto; background: var(--night-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%224%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%224%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%225%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%225%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%225%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%226%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%226%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%227%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%227%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%228%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%228%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%229%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%2210%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%2210%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%2212%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%2212%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%2214%22 y=%222%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat-y right top / 48px 12px, linear-gradient(#000, #000) left top / calc(100% - 48px) 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%224%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%220%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%224%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%224%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%225%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%225%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%225%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%226%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%226%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%227%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%227%22 y=%223%22 width=%221%22 height=%221%22/%3E%3Crect x=%228%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%228%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%229%22 y=%221%22 width=%221%22 height=%221%22/%3E%3Crect x=%2210%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%2210%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%2212%22 y=%220%22 width=%221%22 height=%221%22/%3E%3Crect x=%2212%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%2214%22 y=%222%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat-y right top / 48px 12px, linear-gradient(#000, #000) left top / calc(100% - 48px) 100% no-repeat; }
+.gm-card-banner .gm-card-text { color: rgba(244, 232, 214, .86); }
+.gm-card-banner .gm-card-title { font-size: 28px; }
+.gm-card-banner .gm-eyebrow { color: rgba(244, 232, 214, .8); }
+.gm-card-banner .gm-link { color: var(--warm-paper); border-color: var(--wild-lilac); }
+.gm-card-banner .gm-tag-neutral { color: var(--warm-paper); --gm-tone: rgba(244, 232, 214, .6); }
+.gm-card-banner .gm-card-media-label { top: var(--space-3); bottom: auto; left: auto; right: var(--space-3); }
+@container (max-width: 600px) {
+  .gm-card-banner .gm-card-inner { aspect-ratio: auto; }
+  .gm-card-banner .gm-card-body { width: 100%; align-self: end; height: auto; padding: 180px var(--space-6) var(--space-6); }
+  .gm-card-banner .gm-card-body::before { top: 120px; height: auto; }
+  .gm-card-banner .gm-card-title { font-size: 22px; }
+  .gm-card-banner .gm-card-body::before { -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%2216%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%227%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2211%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2211%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2213%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2213%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2215%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2215%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat-x left top / 12px 48px, linear-gradient(#000, #000) left 48px / 100% 100% no-repeat;   mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%2216%22 shape-rendering=%22crispEdges%22%3E%3Crect x=%222%22 y=%222%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%224%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%226%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%227%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%228%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%229%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2210%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2211%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2211%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2212%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2213%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2213%22 width=%221%22 height=%221%22/%3E%3Crect x=%220%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%222%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2214%22 width=%221%22 height=%221%22/%3E%3Crect x=%221%22 y=%2215%22 width=%221%22 height=%221%22/%3E%3Crect x=%223%22 y=%2215%22 width=%221%22 height=%221%22/%3E%3C/svg%3E") repeat-x left top / 12px 48px, linear-gradient(#000, #000) left 48px / 100% 100% no-repeat; ; }
+}
+
+/* Field */
+.gm-field { display: flex; flex-direction: column; gap: 6px; max-width: 420px; }
+.gm-field-label { font-weight: 500; }
+.gm-field-hint { margin: 0; font-size: 14px; color: var(--ink-muted); }
+.gm-input { font: 400 16px/1.5 var(--font-sans); color: var(--ink); background: var(--surface-raised); border: 1px solid var(--control-border); border-radius: var(--radius-md); padding: 10px 14px; min-height: 44px; }
+.gm-input::placeholder { color: var(--ink-muted); }
+.gm-field-error .gm-input { border-color: var(--accent-text); border-width: 2px; padding: 9px 13px; }
+.gm-field-message { margin: 0; display: flex; gap: var(--space-2); align-items: flex-start; font-size: 14px; color: var(--accent-text); }
+
+/* Icons */
+.gm-icon { display: inline-block; flex: none; vertical-align: middle; }
