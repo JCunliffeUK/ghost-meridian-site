@@ -9,7 +9,8 @@ This repository is the source for the studio's static marketing pages and the as
 - `index.html`: the studio homepage
 - `pixelblitz/index.html`: the Pixel Blitz tool page, with its screenshots in `pixelblitz/screenshots/`
 - `assets/css/`: shared design tokens, components and page layout
-- `assets/js/horizon.js`: the homepage sky and horizon animation
+- `assets/css/home.css` and `assets/js/home.js`: homepage layout, sky, horizon and decorative motion; the Pixel Blitz page keeps its separate layout
+- `assets/js/horizon.js`: retained earlier homepage animation, no longer loaded by the homepage
 - `assets/fonts/` and `assets/img/`: shared fonts, logos and images
 
 ## Editing
