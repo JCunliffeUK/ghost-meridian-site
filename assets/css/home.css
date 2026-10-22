@@ -1,0 +1,144 @@
+/* Layout: one meridian runs the length of the page. The masthead horizon opens it, each section is a waypoint
+   on a thinner line that lights as you reach it, and the footer closes on the same mark. Colour, type and
+   components are the studio's own tokens.css and components.css, unchanged. */
+:root { color-scheme: dark; --max: 1200px; --gutter: clamp(20px, 5vw, 64px); --edge: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter))); --mast-h: 88px; }
+* { box-sizing: border-box; }
+html { background: var(--surface); scroll-behavior: smooth; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); scroll-padding-top: env(safe-area-inset-top, 0px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--surface); font-size: 18px; line-height: 1.5; overflow-x: hidden; }
+img { max-width: 100%; }
+.wrap { padding-left: max(var(--edge), env(safe-area-inset-left, 0px)); padding-right: max(var(--edge), env(safe-area-inset-right, 0px)); }
+
+.skip-link { position: absolute; left: var(--gutter); top: -100px; z-index: 10; padding: 8px 14px; background: var(--accent); color: var(--on-accent); font-weight: 500; text-decoration: none; }
+.skip-link:focus { top: 12px; outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* Masthead */
+.site-top { padding-top: var(--space-8); }
+.site-top .gm-masthead { --gm-logo-h: 56px; --gm-line-top: 42.91px; --gm-line-h: 2.68px; }
+.site-nav { gap: var(--space-1) var(--space-6); padding-top: 4px; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: none; font: 500 16px/1.25 var(--font-sans); transition: color 140ms ease; }
+.site-nav a:hover { color: var(--accent-text); }
+.site-nav a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+/* Hero: fills the first screen, the copy sits in the sky and the meridian lands at the fold.
+   Three painted layers drift at different rates as you scroll, snapped to the pixel grid. */
+.hero { position: relative; isolation: isolate; display: flex; flex-direction: column; min-height: calc(100svh - var(--mast-h)); overflow: hidden; }
+.hero-layer, .hero-fx { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; pointer-events: none; will-change: transform; }
+.hero-layer { z-index: -1; }
+.hero-fx { z-index: 2; }
+.hero-copy { position: relative; z-index: 1; margin-block: auto; padding-block: var(--space-12) var(--space-8); }
+.hero-title { margin: 0; max-width: 13em; font: 700 clamp(44px, 5.6vw, 68px)/0.98 var(--font-sans); letter-spacing: -0.02em; text-wrap: balance; }
+.hero-lead { margin: var(--space-6) 0 0; max-width: 30em; font-size: 20px; line-height: 1.5; color: var(--ink); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-8); }
+.hero-horizon { position: relative; z-index: 1; margin-top: 0; padding-top: var(--space-12); padding-bottom: 72px; }
+.hero-horizon .gm-meridian { height: 56px; --dsize: 52px; }
+.hero-horizon .gm-meridian-reflections { top: calc(50% + var(--dsize) / 2 + 6px); }
+.hero-horizon .gm-meridian-reflections span:nth-child(1) { margin-top: 0; }
+@media (max-width: 639px) { .hero-horizon .gm-meridian { --dsize: 39px; } }
+.js-horizon .gm-meridian-line { clip-path: inset(0 100% 0 0); }
+.horizon-done .gm-meridian-line { clip-path: none !important; }
+.js-horizon .gm-meridian-marker, .js-horizon .gm-meridian-reflections { visibility: hidden; }
+.horizon-done .gm-meridian-marker, .horizon-done .gm-meridian-reflections,
+.marker-on .gm-meridian-marker, .marker-on .gm-meridian-reflections { visibility: visible; }
+
+/* Spine: the meridian carried down the page. A thin line edge to edge, a waypoint where the content starts,
+   and the stretch behind you lights up once you have reached it. */
+.spine { position: relative; height: 24px; margin-bottom: var(--space-12); }
+.spine-line, .spine-lit { position: absolute; left: 0; top: 50%; height: 2px; margin-top: -1px; border-radius: var(--radius-pill); }
+.spine-line { right: 0; background: var(--line); }
+.spine-lit { width: 0; background: var(--logo); transition: width 520ms steps(13, end); }
+.spine.is-lit .spine-lit { width: var(--edge); }
+.spine-mark { position: absolute; left: var(--edge); top: 50%; width: 20px; height: 20px; transform: translate(-50%, -50%); color: var(--line); transition: color 120ms steps(2, end); }
+.spine-mark svg { display: block; width: 20px; height: 20px; shape-rendering: crispEdges; fill: currentColor; }
+.spine-mark .r1, .spine-mark .r2, .spine-mark .r3 { opacity: 0; }
+.spine.is-lit .spine-mark { color: var(--logo); }
+.spine.is-lit .spine-mark .r3 { animation: spine-fill 160ms steps(1, end) 520ms both; }
+.spine.is-lit .spine-mark .r2 { animation: spine-fill 160ms steps(1, end) 640ms both; }
+.spine.is-lit .spine-mark .r1 { animation: spine-fill 160ms steps(1, end) 760ms both; }
+@keyframes spine-fill { to { opacity: 1; } }
+.spine-label { position: absolute; left: calc(var(--edge) + 18px); top: 50%; transform: translateY(-50%); padding: 0 var(--space-2); background: var(--surface); color: var(--ink-muted); transition: color 120ms steps(2, end); }
+.spine.is-lit .spine-label { color: var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  .spine-lit, .spine-mark, .spine-label { transition: none; }
+  .spine.is-lit .spine-mark .r1, .spine.is-lit .spine-mark .r2, .spine.is-lit .spine-mark .r3 { animation: none; opacity: 1; }
+}
+
+/* Sections: the game gets the room, the rest sits quieter */
+.section { padding-bottom: var(--space-16); }
+.section-games { padding-bottom: var(--space-24); }
+.section-head { margin-bottom: var(--space-8); }
+.section-title { margin: 0; font: 700 clamp(34px, 4vw, 48px)/1 var(--font-sans); letter-spacing: -0.015em; text-wrap: balance; }
+.section-games .section-title { font-size: clamp(38px, 4.6vw, 56px); }
+.section-lead { margin: var(--space-4) 0 0; max-width: 36em; font-size: 18px; color: var(--ink-muted); }
+.section-games .section-lead { font-size: 20px; color: var(--ink); }
+
+/* Cards that lead somewhere lift in two steps off their shadow */
+.gm-card-hover .gm-card-frame { transition: transform 100ms steps(2, end); }
+.gm-card-hover:hover .gm-card-frame, .gm-card-hover:focus-within .gm-card-frame { transform: translate(-3px, -3px); }
+.gm-card-hover .gm-card-media-line { transition: border-color 100ms steps(2, end); }
+.gm-card-hover:hover .gm-card-media-line, .gm-card-hover:focus-within .gm-card-media-line { border-color: var(--warm-paper); }
+@media (prefers-reduced-motion: reduce) { .gm-card-hover .gm-card-frame, .gm-card-hover .gm-card-media-line { transition: none; } }
+
+/* The game banner: a painted stand-in until the key art exists */
+.gm-card-banner .gm-card-inner { aspect-ratio: auto; min-height: calc((100cqw - 4px) * 9 / 21); }
+.gm-card-banner .gm-card-media canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+.gm-card-banner .gm-card-text { max-width: 30em; }
+
+/* Tools */
+.tools-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+.tools-grid > .gm-card { margin-bottom: 9px; }
+.tools-next { display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-4); border-top: 2px solid var(--line); }
+.tools-next-top { display: flex; align-items: center; gap: var(--space-3); }
+.tools-next-title { margin: 0; font: 500 22px/1.3 var(--font-sans); }
+.tools-next p { margin: 0; font-size: 16px; color: var(--ink-muted); max-width: 30em; }
+
+/* About: the lead carries the weight, the ghost keeps you company */
+.about { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+.about-text .section-title { margin-bottom: var(--space-6); }
+.about-text p { margin: 0 0 var(--space-4); max-width: 36em; font-size: 16px; color: var(--ink-muted); }
+.about-text .about-lead { font-size: 20px; color: var(--ink); }
+.about-art { margin: 0; display: flex; justify-content: center; }
+.gm-ghost { display: block; width: 192px; height: 192px; shape-rendering: crispEdges; overflow: visible; }
+.gm-ghost-body { transition: transform 200ms steps(2, end); }
+.gm-ghost-eyes { transition: transform 80ms steps(1, end); }
+.gm-ghost.is-blinking .gm-ghost-eyes { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .gm-ghost-body, .gm-ghost-eyes { transition: none; }
+}
+@media (prefers-reduced-motion: no-preference) { .gm-ghost-body { animation: ghost-bob 2.4s steps(2, end) infinite; } }
+@keyframes ghost-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.5px); } }
+
+/* Footer: the horizon again, with the ident where the logo was, so the page closes on the mark it opened with */
+.site-foot { padding-block: var(--space-16) var(--space-8); border-top: 2px solid var(--line); }
+.follow { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-8) var(--space-12); flex-wrap: wrap; margin-bottom: var(--space-12); }
+.follow-title { margin: 0; font: 500 28px/1.2 var(--font-sans); }
+.follow-text { margin: var(--space-3) 0 0; max-width: 32em; font-size: 16px; color: var(--ink-muted); }
+.follow-mail { font-family: var(--font-mono); font-size: 15px; }
+.foot-mast { --gm-logo-h: 56px; --gm-line-top: 42.4px; --gm-line-h: 2.74px; align-items: flex-start; }
+.foot-ident { position: relative; display: block; line-height: 0; }
+.foot-ident .gm-logo { width: auto; height: var(--gm-logo-h); }
+.foot-meta { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--space-1) var(--space-4); min-height: 40px; padding-top: 2px; font: 400 13px/1.5 var(--font-mono); letter-spacing: .04em; color: var(--ink-muted); text-transform: uppercase; }
+
+@media (max-width: 899px) {
+  .tools-grid { grid-template-columns: minmax(0, 1fr); }
+  .about { grid-template-columns: minmax(0, 1fr); }
+  .about-art { justify-content: flex-start; order: -1; }
+  .gm-ghost { width: 128px; height: 128px; }
+}
+@media (max-width: 640px) {
+  :root { --mast-h: 132px; }
+  body { font-size: 17px; }
+  .site-top { padding-top: var(--space-4); }
+  .site-top .gm-masthead { --gm-logo-h: 44px; --gm-line-top: 33.71px; --gm-line-h: 2.11px; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+  .site-nav { justify-content: flex-start; gap: 0 var(--space-6); padding-top: var(--space-1); }
+  .hero-copy { padding-top: var(--space-8); }
+  .hero-lead, .section-games .section-lead, .about-text .about-lead { font-size: 18px; }
+  .hero-horizon { padding-bottom: 64px; }
+  .section { padding-bottom: var(--space-12); }
+  .section-games { padding-bottom: var(--space-16); }
+  .spine { margin-bottom: var(--space-8); }
+  .follow { margin-bottom: var(--space-8); }
+  .foot-mast { --gm-logo-h: 44px; --gm-line-top: 33.3px; --gm-line-h: 2.15px; flex-wrap: wrap; }
+  .foot-meta { flex: 1 0 100%; justify-content: flex-start; padding-top: var(--space-4); }
+}
